@@ -1,0 +1,18 @@
+$cota-blue: #1C2859;
+
+app-header{
+    background-color: $cota-blue;
+    padding: 2rem;
+    color: white;
+    width: 100%;
+    margin-bottom: 1rem;
+
+    .app-logo {
+        height: 3rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .app-title {
+        font-size: 1.5rem;
+    }
+}
