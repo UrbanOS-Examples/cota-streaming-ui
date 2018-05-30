@@ -17,6 +17,7 @@
     "lint": "standard --fix"
   },
   "devDependencies": {
+    "mock-socket": "^7.1.0",
     "standard": "^11.0.1"
   }
 }
