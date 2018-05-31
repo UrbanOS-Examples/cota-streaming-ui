@@ -12,7 +12,7 @@ node('master') {
     stage('Test') {
         docker.image("scos/cota_streaming_ui:${GIT_COMMIT_HASH}")
             .inside() {
-                sh('echo 'Success!'')
+                sh('echo Success')
             }
     }
 }
