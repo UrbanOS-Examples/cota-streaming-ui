@@ -50,7 +50,7 @@ wss.broadcast = function broadcast(data) {
   });
 };
 setInterval(function() {
-  wss.broadcast(someJson);
+  wss.broadcast(JSON.stringify(someJson));
 }, 3000);
 
 app.listen(3001, function () {

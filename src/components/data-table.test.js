@@ -1,12 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import DataTable from './data-table'
-import { shallow, render } from 'enzyme'
-
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-
-configure({ adapter: new Adapter() });
+import { shallow } from 'enzyme'
 
 describe('table renders list elements based on props', () => {
     let subject, testData
