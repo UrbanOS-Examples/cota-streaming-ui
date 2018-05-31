@@ -8,7 +8,6 @@ class DataTable extends Component {
     <li key={Math.floor((Math.random() * 1000000))}>{message}</li>
   )
 
-    console.log(listItems)
     return (
       <div className='data-table'>
         <ul>
