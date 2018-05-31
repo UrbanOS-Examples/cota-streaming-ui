@@ -17,6 +17,8 @@
     "lint": "standard --fix"
   },
   "devDependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "mock-socket": "^7.1.0",
     "standard": "^11.0.1"
   }

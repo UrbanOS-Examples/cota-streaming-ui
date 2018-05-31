@@ -1,12 +1,19 @@
 import React, { Component } from 'react'
+import './data-table.css'
 
 class DataTable extends Component {
 
   render () {
-      console.log(this.props)
+    const listItems = this.props.tableData.map((message) =>
+    <li key={Math.floor((Math.random() * 1000000))}>{message}</li>
+  )
+
+    console.log(listItems)
     return (
       <div className='data-table'>
-        {this.props.tableData}
+        <ul>
+            {listItems}
+        </ul>
       </div>
     )
   }

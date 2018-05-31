@@ -1,12 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import { WebSocket } from 'mock-socket'
+import { shallow, render } from 'enzyme'
+import { WebSocket, Server } from 'mock-socket'
+
+import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+configure({ adapter: new Adapter() });
 
 global.WebSocket = WebSocket
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  ReactDOM.render(<App />, div)
-  ReactDOM.unmountComponentAtNode(div)
+describe('basic app', () => {
+
+  it('renders without crashing', () => {
+    const subject= shallow(<App />)
+    expect(subject.find('.App-header')).toHaveLength(1)
+  })
 })

@@ -1,0 +1,12 @@
+li {
+    list-style: none;
+    margin: 10px 0;
+}
+
+li:nth-child(odd) {
+    color: #0f5c26;
+  }
+  
+li:nth-child(even) {
+    color: blue;
+  }
