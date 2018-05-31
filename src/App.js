@@ -9,13 +9,23 @@ class App extends Component {
     this.state = {tableData: ["start text"]}
   }
 
+  parseCOTAJSON(json) {
+    var parsedJSON = JSON.parse(json).vehicle;
+    return {
+      "vehicleID": parsedJSON.vehicle.id,
+      "routeID": parsedJSON.trip.route_id,
+      "latitude": parsedJSON.position.latitude,
+      "longitude": parsedJSON.position.longitude,
+      "timestamp": parsedJSON.timestamp
+    }
+  }
   componentDidMount() {
     var websocket = new WebSocket('ws://localhost:8080')
     websocket.addEventListener('open', function open() {})
 
     websocket.addEventListener('message', (data, flags) => 
   {
-    this.state.tableData.unshift(data.data)
+    this.state.tableData.unshift(this.parseCOTAJSON(data.data))
     this.setState({tableData: this.state.tableData})
   })
   }

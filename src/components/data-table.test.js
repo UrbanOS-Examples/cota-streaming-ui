@@ -7,15 +7,23 @@ describe('table renders list elements based on props', () => {
     let subject, testData
 
     beforeEach(() => {
-        testData = ['thing1', 'thing2', 'thing3']
+        testData = [
+            {
+                "vehicleID": "12939",
+                "routeID": "152",
+                "latitude": 39.998947143555,
+                "longitude": -82.885498046875,
+                "timestamp": 1527795212
+              } 
+        ]
         subject= shallow(<DataTable tableData={testData}/>)
     })
 
     it('creates the right number of list elements', () => {
-        expect(subject.find('li')).toHaveLength(testData.length)
+        expect(subject.find('td')).toHaveLength(2)
     })
 
     it('populates the list elements with text', () => {
-        expect(subject.find('li').first().text()).toEqual(testData[0])
+        expect(subject.find('td').first().text()).toEqual(testData[0].vehicleID)
     })
 })

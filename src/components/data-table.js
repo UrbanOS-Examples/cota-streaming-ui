@@ -5,14 +5,16 @@ class DataTable extends Component {
 
   render () {
     const listItems = this.props.tableData.map((message) =>
-    <li key={Math.floor((Math.random() * 1000000))}>{message}</li>
+    <tr><td>{message.vehicleID}</td> <td>{message.routeID}</td></tr>
   )
 
     return (
       <div className='data-table'>
-        <ul>
-            {listItems}
-        </ul>
+        <table>
+            <thead>
+                {listItems}
+            </thead>
+        </table>
       </div>
     )
   }
