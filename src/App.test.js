@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import { shallow } from 'enzyme'
+import { shallow, mount } from 'enzyme'
 import { WebSocket, Server } from 'mock-socket'
 
 global.WebSocket = WebSocket
@@ -68,5 +68,21 @@ describe('json parsing', () => {
     let instance = subject.instance()
     let actual = instance.parseCOTAJSON(testJSON)
     expect(actual).toEqual(expectedOutput)
+  })
+})
+
+describe('the web socket connection', () => {
+  it('processes and displays data from the socket', (done) => {
+    const mockServer = new Server('ws://localhost:8080')
+    mockServer.on('connection', server => {
+      mockServer.send(testJSON)
+    })
+ 
+    subject= mount(<App />)
+    subject.setState({tableData: ["some fake data"]})
+    setTimeout(() => {
+      expect(subject.find('td').first().text()).toEqual(expectedOutput.vehicleID)
+      mockServer.stop(done)
+    }, 100)
   })
 })

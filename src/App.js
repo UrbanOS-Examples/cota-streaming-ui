@@ -6,7 +6,7 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {tableData: ["start text"]}
+    this.state = {tableData: []}
   }
 
   parseCOTAJSON(json) {
@@ -23,11 +23,14 @@ class App extends Component {
     var websocket = new WebSocket('ws://localhost:8080')
     websocket.addEventListener('open', function open() {})
 
-    websocket.addEventListener('message', (data, flags) => 
-  {
-    this.state.tableData.unshift(this.parseCOTAJSON(data.data))
-    this.setState({tableData: this.state.tableData})
-  })
+    websocket.addEventListener('message', (data, flags) => {
+      console.log(typeof data.data)
+      if(data.data != null)
+      {
+        this.state.tableData.unshift(this.parseCOTAJSON(data.data))
+      }
+      this.setState({tableData: this.state.tableData})
+    })
   }
 
   render() {
