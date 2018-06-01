@@ -5,7 +5,7 @@ class DataTable extends Component {
   render () {
     const listItems = this.props.tableData.map((message, index) =>
       <tr key={index}><td>{message.vehicleID}</td><td>{message.routeID}</td>
-        <td>{message.latitude}</td><td>{message.longitude}</td><td>{message.timestamp}</td><td>Very</td></tr>
+        <td>{message.latitude}</td><td>{message.longitude}</td><td>{message.timestamp}</td></tr>
     )
     return (
       <div className='data-table'>
@@ -17,7 +17,6 @@ class DataTable extends Component {
               <th scope='col'>Latitude</th>
               <th scope='col'>Longitude</th>
               <th scope='col'>Timestamp</th>
-              <th scope='col'>How cool Erin is</th>
             </tr>
           </thead>
           <tbody>
