@@ -20,7 +20,7 @@ describe('table renders list elements based on props', () => {
   })
 
   it('creates the right number of list elements', () => {
-    expect(subject.find('td')).toHaveLength(6)
+    expect(subject.find('td')).toHaveLength(5)
   })
 
   it('populates the list elements with text', () => {

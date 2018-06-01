@@ -9,10 +9,7 @@ node('master') {
     stage('Build') {
         docker.build("scos/cota_streaming_ui:${GIT_COMMIT_HASH}")
     }
-    stage('Test') {
-        docker.image("scos/cota_streaming_ui:${GIT_COMMIT_HASH}")
-            .inside() {
-                sh('echo Success')
-            }
+    stage('Push to Repository') {
+	sh ('echo Here is where we would push this image to ECR or nexus')
     }
 }
