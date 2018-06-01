@@ -28,10 +28,12 @@ class App extends Component {
     })
 
     websocket.addEventListener('message', data => {
-      // console.log(JSON.parse(JSON.parse(data.data).payload.data).vehicle)
       let parsedData = JSON.parse(data.data)
       if (parsedData.event === 'update') {
         this.state.tableData.unshift(this.parseCOTAJSON(parsedData))
+        if(this.state.tableData.length > 100) {
+          this.state.tableData.splice(-1, this.state.tableData.length - 100)    
+        }
       }
       this.setState({tableData: this.state.tableData})
     })
