@@ -6,4 +6,4 @@ RUN npm test -- --coverage
 RUN npm run build
 
 FROM nginx
-COPY --from=0 /src/build /usr/share/nginx/html
+COPY --from=0 ~/src/build /usr/share/nginx/html
