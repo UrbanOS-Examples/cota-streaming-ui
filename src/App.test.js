@@ -8,49 +8,53 @@ global.WebSocket = WebSocket
 
 let subject, testJSON, expectedOutput
 
-testJSON = `
+testJSON = 
   {
-    "vehicle": {
-      "vehicle": {
-        "license_plate": null,
-        "label": "2939",
-        "id": "12939"
+    "topic":"vehicle_position",
+    "ref":null,
+    "payload":{
+      "data":`{
+        \"vehicle\":{
+          \"vehicle\":{
+            \"license_plate\":null,
+            \"label\":\"2924\",
+            \"id\":\"12924\"
+          },
+          \"trip\":{
+            \"trip_id\":\"630125\",
+            \"start_time\":null,
+            \"start_date\":\"20180601\",
+            \"schedule_relationship\":null,
+            \"route_id\":\"007\",
+            \"direction_id\":null},
+            \"timestamp\":1527877744,
+            \"stop_id\":null,
+            \"position\":{
+              \"speed\":6.041108917997917e-6,
+              \"odometer\":null,
+              \"longitude\":-82.91253662109375,
+              \"latitude\":39.98493957519531,
+              \"bearing\":null
+            },
+            \"occupancy_status\":null,
+            \"current_stop_sequence\":null,
+            \"current_status\":\"IN_TRANSIT_TO\",
+            \"congestion_level\":null},
+            \"trip_update\":null,
+            \"is_deleted\":false,
+            \"id\":\"2924\",
+            \"alert\":null
+          }`
       },
-      "trip": {
-        "trip_id": "637274",
-        "start_time": null,
-        "start_date": "20180531",
-        "schedule_relationship": null,
-        "route_id": "152",
-        "direction_id": null
-      },
-      "timestamp": 1527795212,
-      "stop_id": null,
-      "position": {
-        "speed": 8.6301554347301e-7,
-        "odometer": null,
-        "longitude": -82.885498046875,
-        "latitude": 39.998947143555,
-        "bearing": 270
-      },
-      "occupancy_status": null,
-      "current_stop_sequence": null,
-      "current_status": "IN_TRANSIT_TO",
-      "congestion_level": null
-    },
-    "trip_update": null,
-    "is_deleted": false,
-    "id": "2939",
-    "alert": null
-  }
-`
+      "event":"update"
+    }
 
 expectedOutput = {
-  'vehicleID': '12939',
-  'routeID': '152',
-  'latitude': 39.998947143555,
-  'longitude': -82.885498046875,
-  'timestamp': 1527795212
+  'vehicleID': '12924',
+  'routeID': '007',
+  'latitude': 39.98493957519531,
+  'longitude': -82.91253662109375,
+  'timestamp': 1527877744
 }
 
 describe('basic app', () => {
@@ -73,7 +77,7 @@ describe('the web socket connection', () => {
   it('processes and displays data from the socket', (done) => {
     const mockServer = new Server('ws://localhost:8080')
     mockServer.on('connection', server => {
-      mockServer.send(testJSON)
+      mockServer.send(JSON.stringify(testJSON))
     })
 
     subject = mount(<App />)

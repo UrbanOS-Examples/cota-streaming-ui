@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import './App.css'
 import DataTable from './components/data-table.js'
 
+const joinChannelString = '{"topic":"vehicle_position","event":"phx_join","payload":{},"ref":"1"}'
+const websocketURL = 'ws://localhost:8080'
+
 class App extends Component {
   constructor (props) {
     super(props)
@@ -9,23 +12,26 @@ class App extends Component {
   }
 
   parseCOTAJSON (json) {
-    var parsedJSON = JSON.parse(json).vehicle
+    var parsedData = JSON.parse(json.payload.data).vehicle
     return {
-      'vehicleID': parsedJSON.vehicle.id,
-      'routeID': parsedJSON.trip.route_id,
-      'latitude': parsedJSON.position.latitude,
-      'longitude': parsedJSON.position.longitude,
-      'timestamp': parsedJSON.timestamp
+    'vehicleID': parsedData.vehicle.id,
+    'routeID': parsedData.trip.route_id,
+    'latitude': parsedData.position.latitude,
+    'longitude': parsedData.position.longitude,
+    'timestamp': parsedData.timestamp
     }
   }
   componentDidMount () {
-    var websocket = new WebSocket('ws://localhost:8080')
-    websocket.addEventListener('open', function open () {})
+    var websocket = new WebSocket(websocketURL)
+    websocket.addEventListener('open', function open () {
+      websocket.send(joinChannelString)
+    })
 
-    websocket.addEventListener('message', (data, flags) => {
-      console.log(typeof data.data)
-      if (data.data != null) {
-        this.state.tableData.unshift(this.parseCOTAJSON(data.data))
+    websocket.addEventListener('message', data => {
+      // console.log(JSON.parse(JSON.parse(data.data).payload.data).vehicle)
+      let parsedData = JSON.parse(data.data)
+      if (parsedData.event === 'update') {
+        this.state.tableData.unshift(this.parseCOTAJSON(parsedData))
       }
       this.setState({tableData: this.state.tableData})
     })
