@@ -46,25 +46,23 @@ testJSON = `
 `
 
 expectedOutput = {
-  "vehicleID": "12939",
-  "routeID": "152",
-  "latitude": 39.998947143555,
-  "longitude": -82.885498046875,
-  "timestamp": 1527795212
-} 
+  'vehicleID': '12939',
+  'routeID': '152',
+  'latitude': 39.998947143555,
+  'longitude': -82.885498046875,
+  'timestamp': 1527795212
+}
 
 describe('basic app', () => {
-
   it('renders without crashing', () => {
-    subject= shallow(<App />)
+    subject = shallow(<App />)
     expect(subject.find('.App-header')).toHaveLength(1)
   })
 })
 
 describe('json parsing', () => {
-
   it('outputs the right object for a given JSON', () => {
-    subject= shallow(<App />)
+    subject = shallow(<App />)
     let instance = subject.instance()
     let actual = instance.parseCOTAJSON(testJSON)
     expect(actual).toEqual(expectedOutput)
@@ -77,9 +75,9 @@ describe('the web socket connection', () => {
     mockServer.on('connection', server => {
       mockServer.send(testJSON)
     })
- 
-    subject= mount(<App />)
-    subject.setState({tableData: ["some fake data"]})
+
+    subject = mount(<App />)
+    subject.setState({tableData: ['some fake data']})
     setTimeout(() => {
       expect(subject.find('td').first().text()).toEqual(expectedOutput.vehicleID)
       mockServer.stop(done)
