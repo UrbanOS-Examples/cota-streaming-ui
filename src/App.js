@@ -12,7 +12,7 @@ class App extends Component {
   }
 
   parseCOTAJSON (json) {
-    var parsedData = JSON.parse(json.payload.data).vehicle
+    const parsedData = json.payload.vehicle
     return {
     'vehicleID': parsedData.vehicle.id,
     'routeID': parsedData.trip.route_id,
@@ -27,10 +27,9 @@ class App extends Component {
       websocket.send(joinChannelString)
     })
 
-    websocket.addEventListener('message', data => {
-      let parsedData = JSON.parse(data.data)
-      if (parsedData.event === 'update') {
-        this.state.tableData.unshift(this.parseCOTAJSON(parsedData))
+    websocket.addEventListener('message', eventData => {
+      if (eventData.data.event === 'update') {
+        this.state.tableData.unshift(this.parseCOTAJSON(eventData.data))
         if(this.state.tableData.length > 100) {
           this.state.tableData.splice(-1, this.state.tableData.length - 100)    
         }

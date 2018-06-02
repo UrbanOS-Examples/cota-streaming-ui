@@ -13,38 +13,38 @@ testJSON =
     "topic":"vehicle_position",
     "ref":null,
     "payload":{
-      "data":`{
-        \"vehicle\":{
-          \"vehicle\":{
-            \"license_plate\":null,
-            \"label\":\"2924\",
-            \"id\":\"12924\"
+      "vehicle": {
+          "vehicle": {
+              "license_plate": null,
+              "label": "2928",
+              "id": "12924"
           },
-          \"trip\":{
-            \"trip_id\":\"630125\",
-            \"start_time\":null,
-            \"start_date\":\"20180601\",
-            \"schedule_relationship\":null,
-            \"route_id\":\"007\",
-            \"direction_id\":null},
-            \"timestamp\":1527877744,
-            \"stop_id\":null,
-            \"position\":{
-              \"speed\":6.041108917997917e-6,
-              \"odometer\":null,
-              \"longitude\":-82.91253662109375,
-              \"latitude\":39.98493957519531,
-              \"bearing\":null
-            },
-            \"occupancy_status\":null,
-            \"current_stop_sequence\":null,
-            \"current_status\":\"IN_TRANSIT_TO\",
-            \"congestion_level\":null},
-            \"trip_update\":null,
-            \"is_deleted\":false,
-            \"id\":\"2924\",
-            \"alert\":null
-          }`
+          "trip": {
+              "trip_id": "628650",
+              "start_time": null,
+              "start_date": "20180601",
+              "schedule_relationship": null,
+              "route_id": "007",
+              "direction_id": null
+          },
+          "timestamp": 1527877744,
+          "stop_id": null,
+          "position": {
+              "speed": 5.350696483219508e-6,
+              "odometer": null,
+              "longitude": -82.91253662109375,
+              "latitude": 39.98493957519531,
+              "bearing": null
+          },
+          "occupancy_status": null,
+          "current_stop_sequence": null,
+          "current_status": "IN_TRANSIT_TO",
+          "congestion_level": null
+        },
+        "trip_update": null,
+        "is_deleted": false,
+        "id": "2928",
+        "alert": null
       },
       "event":"update"
     }
@@ -77,7 +77,7 @@ describe('the web socket connection', () => {
   it('processes and displays data from the socket', (done) => {
     const mockServer = new Server('ws://localhost:8080')
     mockServer.on('connection', server => {
-      mockServer.send(JSON.stringify(testJSON))
+      mockServer.send(testJSON)
     })
 
     subject = mount(<App />)
