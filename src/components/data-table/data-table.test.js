@@ -3,7 +3,7 @@ import DataTable from './data-table'
 import moment from 'moment'
 import { shallow } from 'enzyme'
 
-describe.only('table renders list elements based on props', () => {
+describe('table renders list elements based on props', () => {
   let subject, testData
 
   beforeEach(() => {
