@@ -1,5 +1,6 @@
 import React from 'react'
 import lodash from 'lodash'
+import { Socket } from 'phoenix'
 
 export default function withStream (WrappedComponent, websocketURL) {
   return class extends React.Component {
@@ -10,11 +11,18 @@ export default function withStream (WrappedComponent, websocketURL) {
     }
 
     componentDidMount () {
-      var websocket = new WebSocket(this.websocketURL)
+      this.socket = new Socket(this.websocketURL)
+      this.socket.connect()
 
-      websocket.addEventListener('open', () => this.onSocketOpen(websocket))
+      // vehicle_position is the topic that is subscribed to
+      this.channel = this.socket.channel('vehicle_position')
+      // The update event is the event on the message that Phoenix sends
+      this.channel.on('update', msg => this.onMessageArrived(msg))
 
-      websocket.addEventListener('message', message => this.onMessageArrived(message))
+      this.channel.join()
+        .receive('ok', () => console.log('Connection Successful'))
+        .receive('error', ({reason}) => console.log('failed join', reason))
+        .receive('timeout', () => console.log('Networking issue. Still waiting...'))
     }
 
     onSocketOpen (websocket) {
@@ -22,19 +30,15 @@ export default function withStream (WrappedComponent, websocketURL) {
     }
 
     onMessageArrived (message) {
-      var parsedJSON = JSON.parse(message.data)
+      let clonedStreamData = this.state.streamData.slice(0)
 
-      if (parsedJSON.event === 'update') {
-        let clonedStreamData = this.state.streamData.slice(0)
+      clonedStreamData.unshift(this.parseCOTAJSON(message))
 
-        clonedStreamData.unshift(this.parseCOTAJSON(parsedJSON))
-
-        this.setState({ streamData: lodash.take(clonedStreamData, 100) })
-      }
+      this.setState({ streamData: lodash.take(clonedStreamData, 100) })
     }
 
     parseCOTAJSON (json) {
-      const vehicleData = json.payload.vehicle
+      const vehicleData = json.vehicle
       return {
         'vehicleID': vehicleData.vehicle.id,
         'routeID': vehicleData.trip.route_id,
