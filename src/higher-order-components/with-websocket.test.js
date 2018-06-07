@@ -4,21 +4,9 @@ import lodash from 'lodash'
 import { shallow } from 'enzyme'
 
 describe('with websocket', () => {
-  let subject, FakeElement, openEventListener, messageEventListener, sendSpy
-
-  const mockWebsocket = class MockWebsocket {
-    constructor () {
-      sendSpy = jest.fn()
-      this.addEventListener = (eventType, fn) => {
-        eventType === 'open' ? openEventListener = fn : messageEventListener = fn
-      }
-      this.send = sendSpy
-    }
-  }
+  let subject, FakeElement
 
   beforeEach(() => {
-    window.WebSocket = mockWebsocket
-
     FakeElement = () => <div />
 
     const ElementWithWebsocket = withWebsocket(FakeElement, 'ws://my-websocket')
@@ -26,43 +14,20 @@ describe('with websocket', () => {
     subject = shallow(<ElementWithWebsocket />)
   })
 
-  it('sends a phoenix websocket handshake when connection is opened', () => {
-    let expected = {
-      topic: 'vehicle_position',
-      event: 'phx_join',
-      payload: {},
-      ref: '1'
-    }
-
-    openEventListener()
-
-    expect(sendSpy).toHaveBeenCalledWith(JSON.stringify(expected))
-  })
-
   it('passes the data prop with information from the websocket', () => {
     const fakeData = createTestData('id 1')
 
-    messageEventListener(fakeData.message)
+    subject.instance().onMessageArrived(fakeData.message)
 
     subject.update()
 
     expect(subject.find(FakeElement).props().data).toEqual([fakeData.expected])
   })
 
-  it('does not update the props if the event type is not update', () => {
-    const fakeData = createTestData('id 1', 'not update')
-
-    messageEventListener(fakeData.message)
-
-    subject.update()
-
-    expect(subject.find(FakeElement).props().data).toEqual([])
-  })
-
   it('prepends data when data already exists', () => {
     const messages = [createTestData('id 1'), createTestData('id 2')]
 
-    messages.forEach(it => messageEventListener(it.message))
+    messages.forEach(it => subject.instance().onMessageArrived(it.message))
 
     subject.update()
 
@@ -73,8 +38,8 @@ describe('with websocket', () => {
     const messages = lodash.times(100, index => createTestData(`id ${index}`))
     const latestMessage = createTestData('latest')
 
-    messages.forEach(it => messageEventListener(it.message))
-    messageEventListener(latestMessage.message)
+    messages.forEach(it => subject.instance().onMessageArrived(it.message))
+    subject.instance().onMessageArrived(latestMessage.message)
 
     subject.update()
 
@@ -84,14 +49,11 @@ describe('with websocket', () => {
 
   function createTestData (vehicleId, eventType = 'update') {
     const messageData = {
-      event: eventType,
-      payload: {
-        vehicle: {
-          vehicle: { id: vehicleId },
-          trip: { route_id: 'my route' },
-          position: { latitude: -1.23, longitude: 123.3 },
-          timestamp: 123
-        }
+      vehicle: {
+        vehicle: { id: vehicleId },
+        trip: { route_id: 'my route' },
+        position: { latitude: -1.23, longitude: 123.3 },
+        timestamp: 123
       }
     }
 
@@ -104,7 +66,7 @@ describe('with websocket', () => {
     }
 
     return {
-      message: { data: JSON.stringify(messageData) },
+      message: messageData,
       expected: expectedValue
     }
   }
