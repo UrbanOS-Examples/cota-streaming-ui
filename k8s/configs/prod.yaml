@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cota-streaming-ui
+  namespace: default
+data:
+  env: "prod"
