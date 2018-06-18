@@ -1,2 +1,1 @@
-window.WEBSOCKET_HOST = 'someurl.com'
-window.WEBSOCKET_PORT = 80
+window.WEBSOCKET_HOST = 'someurl.com:80'

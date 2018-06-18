@@ -1,2 +1,1 @@
-window.WEBSOCKET_HOST = 'localhost'
-window.WEBSOCKET_PORT = 4000
+window.WEBSOCKET_HOST = 'localhost:4000'

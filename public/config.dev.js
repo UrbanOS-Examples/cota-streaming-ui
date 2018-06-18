@@ -1,2 +1,1 @@
-window.WEBSOCKET_HOST = '10.0.82.183'
-window.WEBSOCKET_PORT = 80
+window.WEBSOCKET_HOST = window.location.host
