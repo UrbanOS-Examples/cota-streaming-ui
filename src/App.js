@@ -1,5 +1,5 @@
 import React from 'react'
-import DataTable from './components/data-table'
+import COTAPositionMap from './components/cota-position-map'
 import Header from './components/header'
 
 import './App.scss'
@@ -7,6 +7,6 @@ import './App.scss'
 export default () => (
   <main-app-element>
     <Header />
-    <DataTable />
+    <COTAPositionMap />
   </main-app-element>
 )

@@ -1,5 +1,4 @@
 import React from 'react'
-import lodash from 'lodash'
 import { Socket } from 'phoenix'
 
 export default function withStream (WrappedComponent, websocketURL) {
@@ -7,7 +6,7 @@ export default function withStream (WrappedComponent, websocketURL) {
     constructor (props) {
       super(props)
       this.websocketURL = websocketURL
-      this.state = {streamData: []}
+      this.state = { }
     }
 
     componentDidMount () {
@@ -30,26 +29,28 @@ export default function withStream (WrappedComponent, websocketURL) {
     }
 
     onMessageArrived (message) {
-      let clonedStreamData = this.state.streamData.slice(0)
+      let msg = this.parseCOTAJSON(message)
+      let newState = Object.assign({}, this.state)
 
-      clonedStreamData.unshift(this.parseCOTAJSON(message))
+      newState[msg.vehicleId] = msg
 
-      this.setState({ streamData: lodash.take(clonedStreamData, 100) })
+      this.setState(newState)
     }
 
-    parseCOTAJSON (json) {
-      const vehicleData = json.vehicle
+    parseCOTAJSON (msg) {
+      const vehicleData = msg.vehicle
       return {
-        'vehicleID': vehicleData.vehicle.id,
-        'routeID': vehicleData.trip.route_id,
-        'latitude': vehicleData.position.latitude,
-        'longitude': vehicleData.position.longitude,
-        'timestamp': vehicleData.timestamp * 1000
+        vehicleId: vehicleData.vehicle.id,
+        routeId: vehicleData.trip.route_id,
+        latitude: vehicleData.position.latitude,
+        longitude: vehicleData.position.longitude,
+        bearing: vehicleData.position.bearing || 0,
+        timestamp: vehicleData.timestamp * 1000
       }
     }
 
     render () {
-      return <WrappedComponent data={this.state.streamData} {...this.props} />
+      return <WrappedComponent data={Object.values(this.state)} {...this.props} />
     }
   }
 }
