@@ -37,7 +37,7 @@ describe('map', () => {
   describe('viewport is updated', () => {
     beforeEach(() => {
       iconFactory.createBusIcon.mockReset()
-      
+
       subject.find(Map).props().onViewportChanged({ zoom: 'some new zoom' })
       subject.update()
     })

@@ -5,13 +5,13 @@ import iconFactory from './icon-factory'
 import './map.scss'
 
 export default class extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.defaultZoom = 12
     this.state = { zoom: this.defaultZoom }
   }
 
-  render() {
+  render () {
     return (
       <Map center={[39.9612, -82.9988]} zoom={this.defaultZoom} onViewportChanged={viewport => this.onViewportChanged(viewport)}>
         <TileLayer url='http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png' />
@@ -20,7 +20,7 @@ export default class extends React.Component {
     )
   }
 
-  onViewportChanged(viewport) {
+  onViewportChanged (viewport) {
     this.setState({ zoom: viewport.zoom })
   }
 }
