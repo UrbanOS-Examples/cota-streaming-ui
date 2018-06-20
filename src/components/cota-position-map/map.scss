@@ -1,4 +1,6 @@
 .leaflet-container {
-    flex-grow: 1;
-    width: 100%;
+    flex-shrink: 0;
+    height: calc(100% - 1rem);
+    width: 95%;
+    margin-bottom: 1rem;
 }
