@@ -1,6 +1,12 @@
-.leaflet-container {
-    flex-shrink: 0;
+map-element {
     height: calc(100% - 1rem);
     width: 95%;
-    margin-bottom: 1rem;
+    position: relative;
+    flex-shrink: 0;
+
+    .leaflet-container {
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+    }
 }
