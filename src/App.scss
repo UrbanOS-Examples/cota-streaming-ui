@@ -1,19 +1,18 @@
+@import './styles/mixins.scss';
+
 main-app-element {
+  @include flex-column();
+
   height: 100%;
   width: 100%;
   text-align: center;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
 
   .main-content {
+    @include flex-column();
+    
     height: 100%;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 1rem 0;
-
     overflow-y: scroll;
+    margin: 1rem 0;
   }
 }
