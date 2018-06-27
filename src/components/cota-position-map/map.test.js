@@ -17,6 +17,10 @@ describe('map', () => {
     subject = shallow(<CotaMap data={vehicles} />)
   })
 
+  it('has the prop fadeAnimation set to false, to improve performance', () => {
+    expect(subject.find(Map).props().fadeAnimation).toEqual(false)
+  })
+
   it('creates the correct number of rotating markers', () => {
     expect(subject.find(RotatedMarker).length).toEqual(vehicles.length)
   })
