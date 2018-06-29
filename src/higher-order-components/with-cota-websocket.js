@@ -1,7 +1,7 @@
 import React from 'react'
 import { Socket } from 'phoenix'
 
-export default function withStream (WrappedComponent, websocketURL) {
+export default function(WrappedComponent, websocketURL) {
   return class extends React.Component {
     constructor (props) {
       super(props)
@@ -22,10 +22,6 @@ export default function withStream (WrappedComponent, websocketURL) {
         .receive('ok', () => console.log('Connection Successful'))
         .receive('error', ({reason}) => console.log('failed join', reason))
         .receive('timeout', () => console.log('Networking issue. Still waiting...'))
-    }
-
-    onSocketOpen (websocket) {
-      websocket.send('{"topic":"vehicle_position","event":"phx_join","payload":{},"ref":"1"}')
     }
 
     onMessageArrived (message) {

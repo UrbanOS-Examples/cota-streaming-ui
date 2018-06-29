@@ -1,3 +1,3 @@
-import Map from './map-connector'
+import Map from './bus-map'
 
 export default Map
