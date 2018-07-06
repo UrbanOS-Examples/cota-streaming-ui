@@ -1,3 +1,3 @@
-import Map from './map-connector'
+import Map from './connect'
 
 export default Map
