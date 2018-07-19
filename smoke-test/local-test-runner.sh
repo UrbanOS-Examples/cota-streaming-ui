@@ -5,10 +5,6 @@ delete-smoke-test-resources() {
     kubectl delete -f k8s/ \
         2>/dev/null \
         || echo "no smoke test deployments to delete"
-
-    kubectl delete -f ../k8s/deployment \
-        2>/dev/null \
-        || echo "no cota-ui clusters to delete"
 }
 
 if ! minikube status; then
@@ -20,10 +16,9 @@ eval $(minikube docker-env)
 delete-smoke-test-resources
 trap "delete-smoke-test-resources" EXIT
 
-# manually change the k8s/01-deployment.yaml to `imagePullPolicy: Never` and to use this image
+# manually change the k8s/01-deployment.yaml to `imagePullPolicy: Never` and to use this local image
 docker build -t scos/cota-streaming-ui-smoke-test:local .
 
-kubectl apply -f ../k8s/deployment
 kubectl apply -f k8s/
 
 until kubectl logs -f cota-ui-smoke-tester 2>/dev/null; do

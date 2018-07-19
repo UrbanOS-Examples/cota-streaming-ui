@@ -12,4 +12,4 @@ spec:
   containers:
     - name: cota-ui-smoke-tester
       image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/cota-streaming-ui-smoke-test:latest
-      imagePullPolicy: IfNotPresent
+      imagePullPolicy: Always
