@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cota-ui-smoke-tester
+  namespace: default
+data:
+  ENDPOINT_URL: "cota.dev.smartcolumbusos.com"
