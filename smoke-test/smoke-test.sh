@@ -4,7 +4,7 @@ until grep -qP ".*" test-results.txt; do sleep 1; echo "waiting for DOM"; done
 
 cat test-results.txt
 
-BUS_AMOUNT=$(grep -o leaflet-marker test-results.txt| wc -l)
+BUS_AMOUNT=$(grep -o leaflet-marker-icon test-results.txt| wc -l)
 
 if [ $BUS_AMOUNT -eq 0 ]
 then
