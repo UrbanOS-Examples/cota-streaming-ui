@@ -1,5 +1,5 @@
 import reducer from './index'
-import { POSITION_UPDATE, ROUTE_FILTER } from '../actions'
+import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_FETCH, ROUTE_UPDATE } from '../actions'
 
 describe('cotaApp reducers', () => {
   it('will save the filter when processing a ROUTE_FILTER action', () => {
@@ -98,5 +98,53 @@ describe('cotaApp reducers', () => {
 
     let newState = reducer(currentState, {type: 'ROUTE_FILTER', filter: ['003']})
     expect(newState.data).toEqual(expectedData)
+  })
+
+  it('will transform the data on a ROUTE_UPDATE action', () => {
+    let message = {
+      'help': 'not necessary',
+      'success': true,
+      'result': {
+        'records': [
+          {
+            'LINENUM': '1',
+            'LINENAME': 'Crazy Town'
+          },
+          {
+            'LINENUM': '101',
+            'LINENAME': 'Smallville'
+          }
+        ]
+      }
+    }
+
+    let state = [
+      {value: '001', label: '1 - Crazy Town'},
+      {value: '101', label: '101 - Smallville'}
+    ]
+
+    let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
+    expect(newState.routes).toEqual(state)
+  })
+
+  it('will not transform the routes on an unknown event', () => {
+    let newState = reducer({routes: [{value: '001', label: '1 - Crazy Town'}]}, {type: 'UNKNOWN_ACTION', stuff: []})
+    expect(newState.routes).toEqual([{value: '001', label: '1 - Crazy Town'}])
+  })
+
+  it('will remove all routes on route fetch action', () => {
+    let currentState = {
+      filter: {},
+      data: {},
+      routes: [
+        {value: '001', label: '1 - Crazy Town'},
+        {value: '101', label: '101 - Smallville'}
+      ]
+    }
+
+    let expectedRoutes = []
+
+    let newState = reducer(currentState, {type: ROUTE_FETCH})
+    expect(newState.routes).toEqual(expectedRoutes)
   })
 })
