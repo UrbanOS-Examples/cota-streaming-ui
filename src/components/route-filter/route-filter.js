@@ -1,14 +1,39 @@
 import React from 'react'
+import Select from 'react-select'
+import _ from 'lodash'
+import './route-filter.scss'
 
 export default class extends React.Component {
-    onKeyUp = (e) => {
-      if (e.key === 'Enter') {
-        const value = e.target.value !== '' ? [e.target.value] : []
-        this.props.routeFilter(value)
-      }
+    state = {
+      selectedOption: null
+    }
+
+    handleChange = (selectedOption) => {
+      this.setState({ selectedOption })
+
+      // component sends either {value:<v>, label:<l>} or [undefined]
+      const value = _.flatten([selectedOption])
+        .filter(option => !_.isEmpty(option))
+        .map(option => option.value)
+
+      this.props.routeFilter(value)
     }
 
     render = () => {
-      return <route-filter><br /><input type='text' name='route-filter' placeholder='Filter By Route' onKeyUp={this.onKeyUp} /></route-filter>
+      const { selectedOption } = this.state
+
+      return <route-filter>
+        <Select
+          id='routeSelect'
+          value={selectedOption}
+          onChange={this.handleChange}
+          options={this.props.routes}
+          placeholder='Filter by route...'
+        />
+      </route-filter>
+    }
+
+    componentDidMount = () => {
+      this.props.routeFetch()
     }
 }

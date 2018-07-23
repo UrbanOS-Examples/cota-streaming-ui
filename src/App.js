@@ -8,8 +8,8 @@ import './App.scss'
 export default () => (
   <main-app-element>
     <Header />
+    <RouteFilter />
     <div className='main-content'>
-      <RouteFilter />
       <COTAPositionMap />
     </div>
   </main-app-element>

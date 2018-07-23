@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { routeFilter } from '../../actions'
+import { routeFilter, routeFetch } from '../../actions'
 import RouteFilter from './route-filter'
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => ({routes}) => ({routes})
 
-const mapDispatchToProps = dispatch => bindActionCreators({routeFilter}, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({routeFilter, routeFetch}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(RouteFilter)
