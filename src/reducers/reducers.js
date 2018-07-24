@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_FETCH, ROUTE_UPDATE } from '../actions'
+import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_UPDATE } from '../actions'
 
 const filter = (filter = [], action) => {
   switch (action.type) {
@@ -38,9 +38,7 @@ const routes = (routes = [], action) => {
         const lineNumber = route.LINENUM.padStart(3, '0')
         const lineName = `${route.LINENUM} - ${route.LINENAME}`
         return {value: lineNumber, label: lineName}
-      }, routes)
-    case ROUTE_FETCH:
-      return []
+      })
     default:
       return routes
   }

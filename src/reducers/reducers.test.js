@@ -132,19 +132,18 @@ describe('cotaApp reducers', () => {
     expect(newState.routes).toEqual([{value: '001', label: '1 - Crazy Town'}])
   })
 
-  it('will remove all routes on route fetch action', () => {
+  it('will should not remove all routes on route fetch action', () => {
+    const routes = [
+      { value: '001', label: '1 - Crazy Town' },
+      { value: '101', label: '101 - Smallville' }
+    ]
     let currentState = {
       filter: {},
       data: {},
-      routes: [
-        {value: '001', label: '1 - Crazy Town'},
-        {value: '101', label: '101 - Smallville'}
-      ]
+      routes: routes
     }
 
-    let expectedRoutes = []
-
     let newState = reducer(currentState, {type: ROUTE_FETCH})
-    expect(newState.routes).toEqual(expectedRoutes)
+    expect(newState.routes).toEqual(routes)
   })
 })
