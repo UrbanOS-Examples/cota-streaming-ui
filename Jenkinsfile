@@ -19,7 +19,6 @@ node('master') {
             }
         }
         stage('Deploy to Dev') {
-            println ">>>> DEPLOY TO DEV????"
             build job: 'deploy-cota-streaming-ui', parameters: [credentials(name: 'kubernetesCreds', value: 'kubeconfig-dev'), text(name: 'tag', value: "${GIT_COMMIT_HASH}")]
         }
     }
