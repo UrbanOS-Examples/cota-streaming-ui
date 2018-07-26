@@ -28,7 +28,7 @@ export default class extends React.Component {
           value={selectedOption}
           onChange={this.handleChange}
           options={this.props.routes}
-          placeholder='Filter by route...'
+          placeholder='Filter by route....'
         />
       </route-filter>
     }
