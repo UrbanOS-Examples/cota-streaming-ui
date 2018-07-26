@@ -23,11 +23,7 @@ node('master') {
         }
 
         stage('Deploy') {
-            println ">>>>>>>>> DOING DEPLOY"
-            println ">>>>>>>>> ${params.tag}"
-            sh("cat k8s/deployment/1-deployment.yaml")
             sh("sed -i 's/%VERSION%/${params.tag}/' k8s/deployment/1-deployment.yaml")
-            sh("cat k8s/deployment/1-deployment.yaml")
             kubernetesDeploy(kubeconfigId: "${params.kubernetesCreds}",
                     configs: 'k8s/configs/dev.yaml,k8s/deployment/*',
                     secretName: 'regcred',
