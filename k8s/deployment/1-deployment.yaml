@@ -18,7 +18,7 @@ spec:
       - name: regcred
       containers:
       - name: cota-streaming-ui
-        image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/cota-streaming-ui:latest
+        image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/cota-streaming-ui:%VERSION%
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
