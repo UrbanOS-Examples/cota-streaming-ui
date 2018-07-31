@@ -38,6 +38,7 @@ node('master') {
             stage('Run Smoke Tester') {
                 dir('smoke-test') {
                     def smoker = docker.build("cota-smoke-test")
+                    sleep(time: 1, unit: 'MINUTES') //give the ui time to come online
                     timeout(time: 2, unit: 'MINUTES') {
                         smoker.withRun("-e ENDPOINT_URL=cota.${environment}.smartcolumbusos.com") { container ->
                             sh "docker logs -f ${container.id}"
