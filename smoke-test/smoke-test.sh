@@ -1,4 +1,7 @@
-google-chrome --headless --no-sandbox --dump-dom http://${ENDPOINT_URL} 2> /dev/null > test-results.txt &
+google-chrome \
+    --headless \
+    --no-sandbox \
+    --dump-dom http://${ENDPOINT_URL} 2> /dev/null > test-results.txt &
 
 until grep -qP ".*" test-results.txt; do sleep 1; echo "waiting for DOM"; done
 
