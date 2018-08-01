@@ -34,8 +34,22 @@ node('master') {
             stage('Run Smoke Tester') {
                 dir('smoke-test') {
                     def smoker = docker.build("cota-smoke-test")
-                    sleep(time: 1, unit: 'MINUTES') //give the ui time to come online
+
                     timeout(time: 2, unit: 'MINUTES') {
+                         sh("""#!/bin/bash -e
+                            export AWS_CONFIG_FILE=/var/jenkins_home/.aws/config
+                            export AWS_SHARED_CREDENTIALS_FILE=/var/jenkins_home/.aws/credentials
+                            export AWS_PROFILE=${environment}
+
+                            TARGET_GROUP_ARN=\$(aws elbv2 describe-target-groups --names cota-ui-lb-tg | jq --raw-output .TargetGroups[].TargetGroupArn)
+
+                            until aws elbv2 describe-target-health --region us-west-2 --target-group-arn \$TARGET_GROUP_ARN | jq --raw-output .TargetHealthDescriptions[].TargetHealth.State | grep "^healthy"; do
+                                echo "waiting for load balancer to come online"
+                                sleep 1
+                            done
+                        """.trim())
+
+
                         smoker.withRun("-e ENDPOINT_URL=cota.${environment}.smartcolumbusos.com") { container ->
                             sh "docker logs -f ${container.id}"
                             sh "exit \$(docker inspect ${container.id} --format='{{.State.ExitCode}}')"
