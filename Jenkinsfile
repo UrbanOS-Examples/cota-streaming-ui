@@ -1,21 +1,16 @@
 def uiImage
-def scmVars
 
 node('master') {
     ansiColor('xterm') {
         stage('Checkout') {
-            scmVars = checkout scm
-            GIT_COMMIT_HASH = sh (
-                script: 'git rev-parse HEAD',
-                returnStdout: true
-            ).trim()
+            env.GIT_COMMIT_HASH = checkout(scm).GIT_COMMIT
         }
 
         stage('Build') {
-            uiImage = docker.build("scos/cota-streaming-ui:${GIT_COMMIT_HASH}")
+            uiImage = docker.build("scos/cota-streaming-ui:${env.GIT_COMMIT_HASH}")
         }
 
-        if (scmVars.GIT_BRANCH == 'master') {
+        if (env.BRANCH_NAME == 'master') {
                 stage('Publish') {
                     docker.withRegistry("https://199837183662.dkr.ecr.us-east-2.amazonaws.com", "ecr:us-east-2:aws_jenkins_user") {
                         uiImage.push()
@@ -24,8 +19,9 @@ node('master') {
                 }
 
             def environment = 'dev'
+
             stage('Deploy to Dev') {
-                sh("sed -i 's/%VERSION%/${GIT_COMMIT_HASH}/' k8s/deployment/1-deployment.yaml")
+                sh("sed -i 's/%VERSION%/${env.GIT_COMMIT_HASH}/' k8s/deployment/1-deployment.yaml")
                 kubernetesDeploy(kubeconfigId: "kubeconfig-${environment}",
                         configs: "k8s/configs/${environment}.yaml,k8s/deployment/*",
                         secretName: 'regcred',
