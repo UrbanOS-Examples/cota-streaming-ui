@@ -1,1 +1,1 @@
-window.WEBSOCKET_HOST = 'someurl.com:80'
+window.WEBSOCKET_HOST = window.location.host
