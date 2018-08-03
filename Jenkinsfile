@@ -41,7 +41,7 @@ node('master') {
                             export AWS_SHARED_CREDENTIALS_FILE=/var/jenkins_home/.aws/credentials
                             export AWS_PROFILE=${environment}
 
-                            TARGET_GROUP_ARN=\$(aws elbv2 describe-target-groups --names cota-ui-lb-tg | jq --raw-output .TargetGroups[].TargetGroupArn)
+                            TARGET_GROUP_ARN=\$(aws elbv2 describe-target-groups --names cota-ui-lb-tg-${environment} | jq --raw-output .TargetGroups[].TargetGroupArn)
 
                             until aws elbv2 describe-target-health --region us-west-2 --target-group-arn \$TARGET_GROUP_ARN | jq --raw-output .TargetHealthDescriptions[].TargetHealth.State | grep "^healthy"; do
                                 echo "waiting for load balancer to come online"
