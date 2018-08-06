@@ -52,13 +52,9 @@ node('master') {
 
 def deploy(environment) {
     sh("sed -i 's/%VERSION%/${env.GIT_COMMIT_HASH}/' k8s/deployment/1-deployment.yaml")
-    kubernetesDeploy(kubeconfigId: "kubeconfig-${environment}",
-            configs: "k8s/configs/${environment}.yaml,k8s/deployment/*",
-            secretName: 'regcred',
-            dockerCredentials: [
-                [credentialsId: 'ecr:us-east-2:aws_jenkins_user', url: 'https://199837183662.dkr.ecr.us-east-2.amazonaws.com'],
-            ]
-    )
+    scos.withEksCredentials(environment) {
+        sh 'kubectl apply -f k8s/'
+    }
 }
 
 def runSmokeTest(environment) {
