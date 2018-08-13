@@ -26,9 +26,8 @@ node('master') {
                 image.push()
                 image.push('latest')
             }
-            def environment = 'dev'
-            deploy(environment)
-            runSmokeTest(environment)
+            deploy('dev')
+            runSmokeTest('dev')
         }
 
 
@@ -37,9 +36,8 @@ node('master') {
             stage('Deploy to Staging') {
                 sh "git tag ${tag}"
 
-                def environment = 'staging'
-                deploy(environment)
-                runSmokeTest(environment)
+                deploy('staging')
+                runSmokeTest('staging')
 
                 sh "git push github ${tag}"
                 scos.withDockerRegistry {
@@ -51,9 +49,20 @@ node('master') {
 }
 
 def deploy(environment) {
-    sh("sed -i 's/%VERSION%/${env.GIT_COMMIT_HASH}/' k8s/deployment/1-deployment.yaml")
     scos.withEksCredentials(environment) {
-        sh 'kubectl apply -f k8s/'
+        def terraformOutputs = scos.terraformOutput(environment)
+        def subnets = terraformOutputs.public_subnets.value.join(', ')
+        def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
+
+        sh("""#!/bin/bash
+            export VERSION=${env.GIT_COMMIT_HASH}
+            export DNS_ZONE='${environment}.smartcolumbusos.com'
+            export SUBNET='${subnets}'
+            export SECURITY_GROUPS='${allowInboundTrafficSG}'
+
+            kubectl apply -f k8s/configs/${environment}.yaml
+            find k8s/deployment -type f -exec cat {} \\; -exec echo -e '\\n---' \\; | envsubst | kubectl apply -f -
+        """.trim())
     }
 }
 
@@ -74,7 +83,6 @@ def runSmokeTest(environment) {
                     sleep 1
                 done
             """.trim())
-
 
             retry(2) {
                 sleep(time: 1, unit: 'MINUTES')
