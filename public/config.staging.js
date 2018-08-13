@@ -1,1 +1,1 @@
-window.WEBSOCKET_HOST = window.location.host
+window.WEBSOCKET_HOST = 'socket.staging.smartcolumbusos.com'
