@@ -56,7 +56,7 @@ def deploy(environment) {
 
         sh("""#!/bin/bash
             export VERSION=${env.GIT_COMMIT_HASH}
-            export DNS_ZONE='${environment}.smartcolumbusos.com'
+            export DNS_ZONE='${environment}.internal.smartcolumbusos.com'
             export SUBNET='${subnets}'
             export SECURITY_GROUPS='${allowInboundTrafficSG}'
 
@@ -86,7 +86,7 @@ def runSmokeTest(environment) {
 
             retry(2) {
                 sleep(time: 1, unit: 'MINUTES')
-                smoker.withRun("-e ENDPOINT_URL=cota.${environment}.smartcolumbusos.com") { container ->
+                smoker.withRun("-e ENDPOINT_URL=cota.${environment}.internal.smartcolumbusos.com") { container ->
                     sh "docker logs -f ${container.id}"
                     sh "exit \$(docker inspect ${container.id} --format='{{.State.ExitCode}}')"
                 }
