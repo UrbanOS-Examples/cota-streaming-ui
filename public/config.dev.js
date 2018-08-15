@@ -1,1 +1,1 @@
-window.WEBSOCKET_HOST = 'socket.dev.smartcolumbusos.com'
+window.WEBSOCKET_HOST = 'socket.dev.internal.smartcolumbusos.com'
