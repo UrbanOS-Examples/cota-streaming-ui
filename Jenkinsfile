@@ -57,11 +57,13 @@ def deploy(environment) {
         sh("""#!/bin/bash
             export VERSION=${env.GIT_COMMIT_HASH}
             export DNS_ZONE='${environment}.internal.smartcolumbusos.com'
-            export SUBNET='${subnets}'
+            export SUBNETS='${subnets}'
             export SECURITY_GROUPS='${allowInboundTrafficSG}'
 
             kubectl apply -f k8s/configs/${environment}.yaml
-            find k8s/deployment -type f -exec cat {} \\; -exec echo -e '\\n---' \\; | envsubst | kubectl apply -f -
+            for manifest in k8s/deployment/*.yaml; do
+                cat \$manifest | envsubst | kubectl apply -f -
+            done
         """.trim())
     }
 }
