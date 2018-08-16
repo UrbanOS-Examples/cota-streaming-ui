@@ -61,7 +61,7 @@ def deploy(environment) {
             export SECURITY_GROUPS='${allowInboundTrafficSG}'
 
             kubectl apply -f k8s/configs/${environment}.yaml
-            for manifest in k8s/deployment/*.yaml; do
+            for manifest in k8s/deployment/*; do
                 cat \$manifest | envsubst | kubectl apply -f -
             done
         """.trim())
