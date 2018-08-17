@@ -47,23 +47,24 @@ node('master') {
         }
 
         doStageIf(currentTagIsReadyForProduction, 'Deploy to Production') {
-            def currentTag = env.BRANCH_NAME
+            def releaseTag = env.BRANCH_NAME
             def promotionTag = 'prod'
 
-            deploy(promotionTag, currentTag)
+            deploy('prod')
             runSmokeTest(promotionTag)
 
             scos.applyAndPushGitHubTag(promotionTag)
 
             scos.withDockerRegistry {
-                image = scos.pullImageFromDockerRegistry("scos/cota-streaming-ui", currentTag)
+                image = scos.pullImageFromDockerRegistry("scos/cota-streaming-ui", env.GIT_COMMIT_HASH)
+                image.push(releaseTag)
                 image.push(promotionTag)
             }
         }
     }
 }
 
-def deploy(environment, dockerImageVersion=env.GIT_COMMIT_HASH) {
+def deploy(environment) {
     scos.withEksCredentials(environment) {
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(', ')
@@ -71,7 +72,7 @@ def deploy(environment, dockerImageVersion=env.GIT_COMMIT_HASH) {
 
         sh("""#!/bin/bash
             set -e
-            export VERSION="${dockerImageVersion}"
+            export VERSION="${env.GIT_COMMIT_HASH}"
             export DNS_ZONE="${environment}.internal.smartcolumbusos.com"
             export SUBNETS="${subnets}"
             export SECURITY_GROUPS="${allowInboundTrafficSG}"
