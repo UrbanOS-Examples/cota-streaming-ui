@@ -70,12 +70,11 @@ def deployUiTo(environment) {
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(', ')
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
-        def dnsZone = "${environmentPartOfUrl(environment)}smartcolumbusos.com"
 
         sh("""#!/bin/bash
             set -e
             export VERSION="${env.GIT_COMMIT_HASH}"
-            export DNS_ZONE="${dnsZone}"
+            export DNS_ZONE="${environment}.internal.smartcolumbusos.com"
             export SUBNETS="${subnets}"
             export SECURITY_GROUPS="${allowInboundTrafficSG}"
 
@@ -108,15 +107,11 @@ def runSmokeTestAgainst(environment) {
 
             retry(25) {
                 sleep(time: 5, unit: 'SECONDS')
-                smoker.withRun("-e ENDPOINT_URL=cota.${environmentPartOfUrl(environment)}smartcolumbusos.com") { container ->
+                smoker.withRun("-e ENDPOINT_URL=cota.${environment}.internal.smartcolumbusos.com") { container ->
                     sh "docker logs -f ${container.id}"
                     sh "exit \$(docker inspect ${container.id} --format='{{.State.ExitCode}}')"
                 }
             }
         }
     }
-}
-
-def environmentPartOfUrl(environment) {
-    environment == 'prod' ? '' : "${environment}.internal."
 }
