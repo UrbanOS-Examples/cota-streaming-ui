@@ -1,9 +1,15 @@
 library(
-    identifier: 'pipeline-lib@master',
+    identifier: 'pipeline-lib@1.2.1',
     retriever: modernSCM([$class: 'GitSCMSource',
                           remote: 'https://github.com/SmartColumbusOS/pipeline-lib',
                           credentialsId: 'jenkins-github-user'])
 )
+
+def image
+def doStageIf = scos.&doStageIf
+def doStageIfRelease = doStageIf.curry(scos.isRelease(env.BRANCH_NAME))
+def doStageUnlessRelease = doStageIf.curry(!scos.isRelease(env.BRANCH_NAME))
+def doStageIfPromoted = doStageIf.curry(env.BRANCH_NAME == 'master')
 
 node('master') {
     ansiColor('xterm') {
@@ -11,52 +17,65 @@ node('master') {
             deleteDir()
             env.GIT_COMMIT_HASH = checkout(scm).GIT_COMMIT
 
-            withCredentials([usernamePassword(credentialsId: 'jenkins-github-user', passwordVariable: 'GIT_PWD', usernameVariable: 'GIT_USER')]) {
-                sh 'git remote add github https://$GIT_USER:$GIT_PWD@github.com/SmartColumbusOS/cota-streaming-ui.git'
-            }
+            scos.addGitHubRemoteForTagging("SmartColumbusOS/cota-streaming-ui.git")
         }
 
-        def image
-        stage('Build') {
+        doStageUnlessRelease('Build') {
             image = docker.build("scos/cota-streaming-ui:${env.GIT_COMMIT_HASH}")
         }
 
-        stage('Deploy to Dev') {
+        doStageUnlessRelease('Deploy to Dev') {
             scos.withDockerRegistry {
                 image.push()
                 image.push('latest')
             }
-            deploy('dev')
-            runSmokeTest('dev')
+            deployUiTo('dev')
+            runSmokeTestAgainst('dev')
         }
 
 
-        if (env.BRANCH_NAME == 'master') {
-            def tag = scos.releaseCandidateNumber()
-            stage('Deploy to Staging') {
-                sh "git tag ${tag}"
+        doStageIfPromoted('Deploy to Staging') {
+            def promotionTag = scos.releaseCandidateNumber()
 
-                deploy('staging')
-                runSmokeTest('staging')
+            deployUiTo('staging')
+            runSmokeTestAgainst('staging')
 
-                sh "git push github ${tag}"
-                scos.withDockerRegistry {
-                    image.push(tag)
-                }
+            scos.applyAndPushGitHubTag(promotionTag)
+
+            scos.withDockerRegistry {
+                image.push(promotionTag)
+            }
+        }
+
+        doStageIfRelease('Deploy to Production') {
+            def releaseTag = env.BRANCH_NAME
+            def promotionTag = 'prod'
+
+            deployUiTo('prod')
+            runSmokeTestAgainst('prod')
+
+            scos.applyAndPushGitHubTag(promotionTag)
+
+            scos.withDockerRegistry {
+                image = scos.pullImageFromDockerRegistry("scos/cota-streaming-ui", env.GIT_COMMIT_HASH)
+                image.push(releaseTag)
+                image.push(promotionTag)
             }
         }
     }
 }
 
-def deploy(environment) {
+def deployUiTo(environment) {
     scos.withEksCredentials(environment) {
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(', ')
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
+        def dnsZone = "${environmentPartOfUrl(environment)}smartcolumbusos.com"
 
         sh("""#!/bin/bash
+            set -e
             export VERSION="${env.GIT_COMMIT_HASH}"
-            export DNS_ZONE="${environment}.internal.smartcolumbusos.com"
+            export DNS_ZONE="${dnsZone}"
             export SUBNETS="${subnets}"
             export SECURITY_GROUPS="${allowInboundTrafficSG}"
 
@@ -68,7 +87,7 @@ def deploy(environment) {
     }
 }
 
-def runSmokeTest(environment) {
+def runSmokeTestAgainst(environment) {
     dir('smoke-test') {
         def smoker = docker.build("cota-smoke-test")
 
@@ -89,11 +108,15 @@ def runSmokeTest(environment) {
 
             retry(25) {
                 sleep(time: 5, unit: 'SECONDS')
-                smoker.withRun("-e ENDPOINT_URL=cota.${environment}.internal.smartcolumbusos.com") { container ->
+                smoker.withRun("-e ENDPOINT_URL=cota.${environmentPartOfUrl(environment)}smartcolumbusos.com") { container ->
                     sh "docker logs -f ${container.id}"
                     sh "exit \$(docker inspect ${container.id} --format='{{.State.ExitCode}}')"
                 }
             }
         }
     }
+}
+
+def environmentPartOfUrl(environment) {
+    environment == 'prod' ? '' : "${environment}.internal."
 }
