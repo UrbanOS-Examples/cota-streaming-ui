@@ -1,1 +1,1 @@
-window.WEBSOCKET_HOST = 'localhost:4000'
+window.WEBSOCKET_HOST = 'ws://localhost:4000'

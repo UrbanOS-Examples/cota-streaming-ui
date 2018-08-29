@@ -52,7 +52,7 @@ const fromEventBus = function * (channel) {
 }
 
 export default function * websocketSaga () {
-  const socket = yield call(createSocket, `ws://${window.WEBSOCKET_HOST}/socket`)
+  const socket = yield call(createSocket, `${window.WEBSOCKET_HOST}/socket`)
   const channel = yield call(createChannel, socket)
   const eventChannel = yield call(createEventChannel, channel)
 

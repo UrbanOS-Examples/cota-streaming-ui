@@ -37,7 +37,8 @@ describe('websocketSaga', () => {
   })
 
   it('establishes a connection to socket and channel', () => {
-    expect(Socket).toBeCalledWith('ws://undefined/socket')
+    // global window object doesn't exist when running in node
+    expect(Socket).toBeCalledWith('undefined/socket')
     expect(channel).toBeCalledWith('vehicle_position')
   })
 
