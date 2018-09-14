@@ -1,5 +1,5 @@
 library(
-    identifier: 'pipeline-lib@2.0.1',
+    identifier: 'pipeline-lib@4.1.0',
     retriever: modernSCM([$class: 'GitSCMSource',
                           remote: 'https://github.com/SmartColumbusOS/pipeline-lib',
                           credentialsId: 'jenkins-github-user'])
@@ -7,18 +7,13 @@ library(
 
 def image
 def doStageIf = scos.&doStageIf
-def doStageIfRelease = doStageIf.curry(scos.isRelease(env.BRANCH_NAME))
-def doStageUnlessRelease = doStageIf.curry(!scos.isRelease(env.BRANCH_NAME))
-def doStageIfPromoted = doStageIf.curry(env.BRANCH_NAME == 'master')
+def doStageIfRelease = doStageIf.curry(scos.changeset.isRelease)
+def doStageUnlessRelease = doStageIf.curry(!scos.changeset.isRelease)
+def doStageIfPromoted = doStageIf.curry(scos.changeset.isMaster)
 
 node('infrastructure') {
     ansiColor('xterm') {
-        stage('Checkout') {
-            deleteDir()
-            env.GIT_COMMIT_HASH = checkout(scm).GIT_COMMIT
-
-            scos.addGitHubRemoteForTagging("SmartColumbusOS/cota-streaming-ui.git")
-        }
+        scos.doCheckoutStage()
 
         doStageUnlessRelease('Build') {
             image = docker.build("scos/cota-streaming-ui:${env.GIT_COMMIT_HASH}")
