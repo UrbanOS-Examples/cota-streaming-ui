@@ -1,12 +1,10 @@
 @import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 route-filter {
+    @include flex-row();
     text-align: left;
     z-index: 10;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
 
     & > * {
         width: 100%;

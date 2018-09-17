@@ -1,5 +1,5 @@
 import leaflet from 'leaflet'
-import busSvg from '../../assets/ic-cotaBus.svg'
+import busSvg from '../../assets/blue-bus.svg'
 
 const createBusIcon = zoomLevel => {
   return leaflet.icon({
