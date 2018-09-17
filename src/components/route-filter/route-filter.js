@@ -6,7 +6,7 @@ import './route-filter.scss'
 export default class extends React.Component {
   constructor (props) {
     super(props)
-    this.ALL_ROUTES = [{ label: 'Filter by lines...', value: '' }]
+    this.ALL_ROUTES = [{ label: 'Filter by lines...' }]
     this.state = { selectedOption: this.ALL_ROUTES }
   }
 
@@ -18,8 +18,8 @@ export default class extends React.Component {
     this.setState({ selectedOption })
 
     const value = _.flatten([selectedOption])
-      .filter(option => !_.isEmpty(option.value))
       .map(option => option.value)
+      .filter(option => option)
 
     this.props.routeFilter(value)
   }
