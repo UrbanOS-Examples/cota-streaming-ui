@@ -43,6 +43,7 @@
     "react": "^16.4.0",
     "react-dev-utils": "^5.0.1",
     "react-dom": "^16.4.0",
+    "react-ga": "^2.5.3",
     "react-leaflet": "^1.9.1",
     "react-leaflet-rotatedmarker": "^0.1.0",
     "react-loader": "^2.4.5",

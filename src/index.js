@@ -9,12 +9,19 @@ import createSagaMiddleware from 'redux-saga'
 import reducers from './reducers'
 import sagas from './sagas'
 import App from './App'
+import ReactGA from 'react-ga';
 
 const sagaMiddleware = createSagaMiddleware()
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(reducers, composeEnhancers(applyMiddleware(sagaMiddleware)))
+
+if('cota.smartcolumbusos.com' === window.location.hostname) {
+  console.log(">>>> Doing the stuff");
+  ReactGA.initialize('UA-125881268-1');
+  ReactGA.pageview(window.location.pathname + window.location.search);
+}
 
 sagaMiddleware.run(sagas)
 
