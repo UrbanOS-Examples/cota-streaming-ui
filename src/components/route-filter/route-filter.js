@@ -4,36 +4,38 @@ import _ from 'lodash'
 import './route-filter.scss'
 
 export default class extends React.Component {
-    state = {
-      selectedOption: null
-    }
+  constructor (props) {
+    super(props)
+    this.ALL_ROUTES = [{ label: 'Filter by lines...' }]
+    this.state = { selectedOption: this.ALL_ROUTES }
+  }
 
-    handleChange = (selectedOption) => {
-      this.setState({ selectedOption })
+  componentDidMount = () => {
+    this.props.routeFetch()
+  }
 
-      // component sends either {value:<v>, label:<l>} or [undefined]
-      const value = _.flatten([selectedOption])
-        .filter(option => !_.isEmpty(option))
-        .map(option => option.value)
+  handleChange = selectedOption => {
+    this.setState({ selectedOption })
 
-      this.props.routeFilter(value)
-    }
+    const value = _.flatten([selectedOption])
+      .map(option => option.value)
+      .filter(option => option)
 
-    render = () => {
-      const { selectedOption } = this.state
+    this.props.routeFilter(value)
+  }
 
-      return <route-filter>
-        <Select
-          id='routeSelect'
-          value={selectedOption}
-          onChange={this.handleChange}
-          options={this.props.routes}
-          placeholder='Filter by route...'
-        />
-      </route-filter>
-    }
+  render = () => {
+    const { selectedOption } = this.state
 
-    componentDidMount = () => {
-      this.props.routeFetch()
-    }
+    return <route-filter>
+      <Select
+        id='routeSelect'
+        value={selectedOption}
+        onChange={this.handleChange}
+        options={this.ALL_ROUTES.concat(this.props.routes)}
+        placeholder='Filter by lines...'
+        backspaceRemovesValue={false}
+      />
+    </route-filter>
+  }
 }

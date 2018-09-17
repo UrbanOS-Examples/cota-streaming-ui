@@ -1,6 +1,12 @@
 @import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 route-filter {
-    min-width: 25%;
+    @include flex-row();
     text-align: left;
+    z-index: 10;
+
+    & > * {
+        width: 100%;
+    }
 }
