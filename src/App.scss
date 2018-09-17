@@ -1,18 +1,47 @@
+@import './styles/variables.scss';
 @import './styles/mixins.scss';
 
 main-app-element {
+  $filter-height: 4rem;
+
   @include flex-column();
 
   height: 100%;
   width: 100%;
-  text-align: center;
 
   .main-content {
     @include flex-column();
     
     height: 100%;
     width: 100%;
+    position: relative;
     overflow-y: scroll;
-    margin: 1rem 0;
+
+    map-element {
+      height: calc(100% - #{$filter-height});
+      width: 100%;
+
+      @media only screen and (min-width: $mobilebreakpoint) {
+        height: 100%;
+      }
+    }
+
+    route-filter {
+      position: relative;
+      height: $filter-height;
+      width: calc(100% - 2rem);
+      padding: 1rem;
+      background-color: $primary;
+
+      @media only screen and (min-width: $mobilebreakpoint) {
+        position: absolute;
+        height: auto;
+        width: 20rem;
+        padding: 0;
+        top: 1rem;
+        left: 1rem;
+        background-color: transparent;
+      }
+    }
   }
 }

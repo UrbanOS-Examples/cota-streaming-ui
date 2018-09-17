@@ -1,18 +1,67 @@
 @import '../../styles/variables.scss';
 
 app-header{
-    background-color: $primary;
-    padding: 2rem;
-    color: white;
-    width: 100%;
-    margin-bottom: 1rem;
+  $gutter: 2rem;
+  $mobileGutter: 1rem;
+
+  background-color: white;
+  padding: 1rem $gutter;
+  color: white;
+  width: calc(100% - (#{$gutter} * 2));
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media only screen and (max-width: $mobilebreakpoint) {
+    width: calc(100% - (#{$mobileGutter} * 2));
+    padding: 1rem $mobileGutter;
+  }
+
+  .logos {
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    flex-grow: 0;
+
+    @media only screen and (max-width: $mobilebreakpoint) {
+      height: 3rem;
+    }
+
+    .cota-logo {
+      height: 100%;
+    }
+
+    .conjunction-junction {
+      color: $almost-black;
+      margin: 0px 1.5rem;
+      font-size: 2rem;
+      @media only screen and (max-width: $mobilebreakpoint) {
+        font-size: 1rem;
+        margin: 0px .5rem;
+      }
+    }
 
     .app-logo {
-        height: 3rem;
-        margin-bottom: 2.5rem;
+      height: 50%;
     }
-    
-    .app-title {
-        font-size: 1.5rem;
+  }
+
+  .about-map-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .75rem 1rem;
+
+    color: white;
+    background-color: $almost-black;
+
+    font-size: .75rem;
+    text-decoration: none;
+    letter-spacing: 1.5px;
+
+    &:hover {
+      background-color: $primary-hover;
     }
+  }
 }
