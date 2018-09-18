@@ -1,5 +1,5 @@
-import React from 'react'
-import { Map, TileLayer, ZoomControl } from 'react-leaflet'
+import React, { createRef } from 'react'
+import { Map, TileLayer, ZoomControl, Marker } from 'react-leaflet'
 import RotatedMarker from 'react-leaflet-rotatedmarker'
 import iconFactory from './icon-factory'
 import Loader from 'react-loader'
@@ -9,18 +9,44 @@ export default class extends React.Component {
   constructor (props) {
     super(props)
     this.defaultZoom = 12
-    this.state = { zoom: this.defaultZoom }
+    this.state = {
+      zoom: this.defaultZoom,
+      hasLocation: false,
+      latlng: {
+        lat: 39.9612,
+        lng: -82.9988
+      }
+    }
+    this.mapRef = createRef()
+  }
+  
+  handleLocationButtonClick () {
+    this.mapRef.current.leafletElement.locate()
   }
 
   render () {
+    const marker = this.state.hasLocation ? (
+      <Marker position={this.state.latlng} icon={iconFactory.createLocationIcon(this.state.zoom)} />
+    ) : null
+
     return (
       <map-element>
-        <Map fadeAnimation={false} center={[39.9612, -82.9988]} zoom={this.defaultZoom} zoomControl={false} onViewportChanged={viewport => this.onViewportChanged(viewport)}>
+        <div className='locationButton' onClick={e => this.handleLocationButtonClick(e)}>CLICK ME </div>
+        <Map
+          fadeAnimation={false}
+          ref={this.mapRef}
+          center={this.state.latlng}
+          zoom={this.defaultZoom}
+          zoomControl={false}
+          onViewportChanged={viewport => this.onViewportChanged(viewport)}
+          onLocationfound={e => this.handleLocationFound(e)}
+        >
           <TileLayer url='https://{s}.tiles.mapbox.com/styles/v1/mapbox/streets-v10/tiles/{z}/{x}/{y}{r}?access_token=pk.eyJ1Ijoic21ydGNidXMiLCJhIjoiY2ptMTB6YjIzMGVuazNwcWcyczk3a2ZmNSJ9.SjVhquTC7K5RzbGqoGZUYg' />
           <Loader loaded={this.props.data.length > 0} length={20} radius={15} color='#1C2859' speed={1.2}>
             {this.props.data.map(it => <RotatedMarker key={it.vehicleId} position={[it.latitude, it.longitude]} rotationAngle={it.bearing} icon={iconFactory.createBusIcon(this.state.zoom)} />)}
           </Loader>
           <ZoomControl position='bottomright' />
+          {marker}
         </Map>
       </map-element>
     )
@@ -28,5 +54,12 @@ export default class extends React.Component {
 
   onViewportChanged (viewport) {
     this.setState({ zoom: viewport.zoom })
+  }
+
+  handleLocationFound = e => {
+    this.setState({
+      hasLocation: true,
+      latlng: e.latlng
+    })
   }
 }

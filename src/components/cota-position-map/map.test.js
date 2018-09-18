@@ -1,24 +1,27 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { shallow, mount } from 'enzyme'
 import CotaMap from './map'
 import { Map } from 'react-leaflet'
 import RotatedMarker from 'react-leaflet-rotatedmarker'
 import iconFactory from './icon-factory'
 
 describe('map', () => {
-  const fakeIcon = 'I am a fake icon'
+
+  const fakeIcon = {
+      createIcon: () => (document.createElement('div')),
+      createShadow: () => (document.createElement('div'))    
+  }
   let subject, vehicles
 
+  
   beforeEach(() => {
-    iconFactory.createBusIcon = jest.fn().mockReturnValue(fakeIcon)
-
-    vehicles = [createVehicle(1, 123, 456, 970), createVehicle(2, -432, 5.32, 543)]
-
-    subject = shallow(<CotaMap data={vehicles} />)
+      iconFactory.createBusIcon = jest.fn().mockReturnValue(fakeIcon)
+      vehicles = [createVehicle(1, 123, 456, 970), createVehicle(2, -432, 5.32, 543)]
+      subject = shallow(<CotaMap data={vehicles} />)
   })
 
   it('has the prop fadeAnimation set to false, to improve performance', () => {
-    expect(subject.find(Map).props().fadeAnimation).toEqual(false)
+      expect(subject.find(Map).props().fadeAnimation).toEqual(false)
   })
 
   it('creates the correct number of rotating markers', () => {
@@ -40,14 +43,27 @@ describe('map', () => {
 
   describe('viewport is updated', () => {
     beforeEach(() => {
-      iconFactory.createBusIcon.mockReset()
-
+      iconFactory.createBusIcon = jest.fn().mockReturnValue(fakeIcon)
       subject.find(Map).props().onViewportChanged({ zoom: 'some new zoom' })
       subject.update()
     })
 
     it('updates the icon scale when viewport is changed', () => {
       expect(iconFactory.createBusIcon.mock.calls).toEqual(vehicles.map(it => ['some new zoom']))
+    })
+  })
+
+  describe('click location buttons', () => {
+    beforeEach(() => {
+      vehicles = [createVehicle(1, 123, 456, 970), createVehicle(2, -432, 5.32, 543)]
+      subject = mount(<CotaMap data={vehicles} />)
+    })
+
+    it('calls location found callback when location button is clicked', () => {
+      subject.handleLocationButtonClick = jest.fn()
+      const locationButton= subject.find('[className="locationButton"]')
+      locationButton.simulate('click')
+      expect(subject.handleLocationButtonClick.mock.calls).toEqual(1)
     })
   })
 
