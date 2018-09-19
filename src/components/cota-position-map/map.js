@@ -60,6 +60,6 @@ export default class extends React.Component {
       hasLocation: true,
       latlng: e.latlng
     })
-    this.mapRef.current.leafletElement.setZoomAround(e.latlng, 18, true)
+    this.mapRef.current.leafletElement.setZoomAround(e.latlng, 16, true)
   }
 }
