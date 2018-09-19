@@ -1,6 +1,6 @@
 import leaflet from 'leaflet'
 import busSvg from '../../assets/blue-bus.svg'
-import locationPin from '../../assets/red-bus.svg'
+import locationPin from '../../assets/ic_location-dot.svg'
 
 const createIcon = (zoomLevel, iconType) => {
   return leaflet.icon({

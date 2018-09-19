@@ -2,16 +2,6 @@ map-element {
     position: relative;
     flex-shrink: 0;
 
-    .locationButton {
-        height: 50px;
-        width: 50px;
-        background-color: #ff00ff;
-        position: absolute;
-        right: 20px;
-        top: 20px;
-        z-index: 1000000;
-    }
-
     .leaflet-container {
         height: 100%;
         width: 100%;

@@ -19,8 +19,8 @@ export default class extends React.Component {
     }
     this.mapRef = createRef()
   }
-  
-  handleLocationButtonClick () {
+
+  componentDidMount () {
     this.mapRef.current.leafletElement.locate()
   }
 
@@ -31,7 +31,6 @@ export default class extends React.Component {
 
     return (
       <map-element>
-        <div className='locationButton' onClick={e => this.handleLocationButtonClick(e)}>CLICK ME </div>
         <Map
           fadeAnimation={false}
           ref={this.mapRef}
@@ -61,5 +60,6 @@ export default class extends React.Component {
       hasLocation: true,
       latlng: e.latlng
     })
+    this.mapRef.current.leafletElement.setZoomAround(e.latlng, 18, true)
   }
 }

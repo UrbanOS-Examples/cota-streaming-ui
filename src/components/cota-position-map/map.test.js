@@ -1,27 +1,25 @@
 import React from 'react'
-import { shallow, mount } from 'enzyme'
+import { mount } from 'enzyme'
 import CotaMap from './map'
 import { Map } from 'react-leaflet'
 import RotatedMarker from 'react-leaflet-rotatedmarker'
 import iconFactory from './icon-factory'
 
 describe('map', () => {
-
   const fakeIcon = {
-      createIcon: () => (document.createElement('div')),
-      createShadow: () => (document.createElement('div'))    
+    createIcon: () => (document.createElement('div')),
+    createShadow: () => (document.createElement('div'))
   }
   let subject, vehicles
 
-  
   beforeEach(() => {
-      iconFactory.createBusIcon = jest.fn().mockReturnValue(fakeIcon)
-      vehicles = [createVehicle(1, 123, 456, 970), createVehicle(2, -432, 5.32, 543)]
-      subject = shallow(<CotaMap data={vehicles} />)
+    iconFactory.createBusIcon = jest.fn().mockReturnValue(fakeIcon)
+    vehicles = [createVehicle(1, 123, 456, 970), createVehicle(2, -432, 5.32, 543)]
+    subject = mount(<CotaMap data={vehicles} />)
   })
 
   it('has the prop fadeAnimation set to false, to improve performance', () => {
-      expect(subject.find(Map).props().fadeAnimation).toEqual(false)
+    expect(subject.find(Map).props().fadeAnimation).toEqual(false)
   })
 
   it('creates the correct number of rotating markers', () => {
@@ -59,11 +57,10 @@ describe('map', () => {
       subject = mount(<CotaMap data={vehicles} />)
     })
 
-    it('calls location found callback when location button is clicked', () => {
-      subject.handleLocationButtonClick = jest.fn()
-      const locationButton= subject.find('[className="locationButton"]')
-      locationButton.simulate('click')
-      expect(subject.handleLocationButtonClick.mock.calls).toEqual(1)
+    it('creates a marker if the state has found the location', () => {
+      expect(subject.find('Marker').length).toBe(0)
+      subject.setState({hasLocation: true})
+      expect(subject.find('Marker').length).toBe(1)
     })
   })
 
