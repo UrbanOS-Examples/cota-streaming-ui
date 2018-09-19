@@ -18,7 +18,6 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(reducers, composeEnhancers(applyMiddleware(sagaMiddleware)))
 
 if('cota.smartcolumbusos.com' === window.location.hostname) {
-  console.log(">>>> Doing the stuff");
   ReactGA.initialize('UA-125881268-1');
   ReactGA.pageview(window.location.pathname + window.location.search);
 }
