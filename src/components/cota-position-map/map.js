@@ -16,7 +16,7 @@ export default class extends React.Component {
     return (
       <map-element>
         <Map fadeAnimation={false} center={[39.9612, -82.9988]} zoom={this.defaultZoom} zoomControl={false} onViewportChanged={viewport => this.onViewportChanged(viewport)}>
-          <TileLayer url='http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png' />
+          <TileLayer url='https://{s}.tiles.mapbox.com/styles/v1/mapbox/streets-v10/tiles/{z}/{x}/{y}{r}?access_token=pk.eyJ1Ijoic21ydGNidXMiLCJhIjoiY2ptMTB6YjIzMGVuazNwcWcyczk3a2ZmNSJ9.SjVhquTC7K5RzbGqoGZUYg' />
           <Loader loaded={this.props.data.length > 0} length={20} radius={15} color='#1C2859' speed={1.2}>
             {this.props.data.map(it => <RotatedMarker key={it.vehicleId} position={[it.latitude, it.longitude]} rotationAngle={it.bearing} icon={iconFactory.createBusIcon(this.state.zoom)} />)}
           </Loader>
