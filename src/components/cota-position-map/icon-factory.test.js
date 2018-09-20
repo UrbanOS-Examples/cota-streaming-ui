@@ -1,7 +1,7 @@
 import leaflet from 'leaflet'
 import busSvg from '../../ic-cotaBus.svg'
 import iconFactory from './icon-factory'
-import locationPin from '../../assets/red-bus.svg'
+import locationPin from '../../assets/ic_location-dot.svg'
 
 describe('Icon Factory', () => {
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('Icon Factory', () => {
 
     expect(leaflet.icon).toHaveBeenCalledWith({
       iconUrl: locationPin,
-      iconSize: [3.2, 2.75]
+      iconSize: [2, 2]
     })
   })
 

@@ -26,8 +26,9 @@ export default class extends React.Component {
 
   render () {
     const marker = this.state.hasLocation ? (
-      <Marker position={this.state.latlng} icon={iconFactory.createLocationIcon(this.state.zoom)} />
+      <Marker position={this.state.latlng} icon={iconFactory.createLocationIcon(this.state.zoom)} zIndexOffset={1000} />
     ) : null
+    const accessToken = 'pk.eyJ1Ijoic21ydGNidXMiLCJhIjoiY2ptMTB6YjIzMGVuazNwcWcyczk3a2ZmNSJ9.SjVhquTC7K5RzbGqoGZUYg'
 
     return (
       <map-element>
@@ -40,7 +41,7 @@ export default class extends React.Component {
           onViewportChanged={viewport => this.onViewportChanged(viewport)}
           onLocationfound={e => this.handleLocationFound(e)}
         >
-          <TileLayer url='https://{s}.tiles.mapbox.com/styles/v1/mapbox/streets-v10/tiles/{z}/{x}/{y}{r}?access_token=pk.eyJ1Ijoic21ydGNidXMiLCJhIjoiY2ptMTB6YjIzMGVuazNwcWcyczk3a2ZmNSJ9.SjVhquTC7K5RzbGqoGZUYg' />
+          <TileLayer url={`https://{s}.tiles.mapbox.com/styles/v1/mapbox/streets-v10/tiles/{z}/{x}/{y}{r}?access_token=${accessToken}`} />
           <Loader loaded={this.props.data.length > 0} length={20} radius={15} color='#1C2859' speed={1.2}>
             {this.props.data.map(it => <RotatedMarker key={it.vehicleId} position={[it.latitude, it.longitude]} rotationAngle={it.bearing} icon={iconFactory.createBusIcon(this.state.zoom)} />)}
           </Loader>

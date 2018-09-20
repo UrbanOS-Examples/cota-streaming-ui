@@ -2,19 +2,18 @@ import leaflet from 'leaflet'
 import busSvg from '../../assets/blue-bus.svg'
 import locationPin from '../../assets/ic_location-dot.svg'
 
-const createIcon = (zoomLevel, iconType) => {
+const createBusIcon = zoomLevel => {
   return leaflet.icon({
-    iconUrl: iconType,
+    iconUrl: busSvg,
     iconSize: [3.2 * zoomLevel, 2.75 * zoomLevel]
   })
 }
 
-const createBusIcon = zoomLevel => {
-  return createIcon(zoomLevel, busSvg)
-}
-
 const createLocationIcon = zoomLevel => {
-  return createIcon(zoomLevel, locationPin)
+  return leaflet.icon({
+    iconUrl: locationPin,
+    iconSize: [2 * zoomLevel, 2 * zoomLevel]
+  })
 }
 
 export default { createBusIcon, createLocationIcon }
