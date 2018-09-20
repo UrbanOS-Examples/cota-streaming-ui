@@ -21,7 +21,7 @@ export default class extends React.Component {
   }
 
   componentDidMount () {
-    this.mapRef.current.leafletElement.locate()
+    this.mapRef.current.leafletElement.locate({timeout: 30000})
   }
 
   render () {
