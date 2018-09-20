@@ -45,7 +45,7 @@ export default class extends React.Component {
           <Loader loaded={this.props.data.length > 0} length={20} radius={15} color='#1C2859' speed={1.2}>
             {this.props.data.map(it => <RotatedMarker key={it.vehicleId} position={[it.latitude, it.longitude]} rotationAngle={it.bearing} icon={iconFactory.createBusIcon(this.state.zoom)} />)}
           </Loader>
-          <ZoomControl position='bottomright' />
+          <ZoomControl position='topright' />
           {marker}
         </Map>
       </map-element>

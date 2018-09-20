@@ -5,6 +5,20 @@ route-filter {
     @include flex-row();
     text-align: left;
     z-index: 10;
+    position: relative;
+    height: $filter-height;
+    width: calc(100% - 2rem);
+    padding: 1rem;
+    background-color: transparent;
+
+    @media only screen and (min-width: $mobilebreakpoint) {
+        position: absolute;
+        height: auto;
+        width: 20rem;
+        padding: 0;
+        top: 1rem;
+        left: 1rem;
+    }
 
     & > * {
         width: 100%;
