@@ -65,6 +65,7 @@ def deployUiTo(environment) {
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(', ')
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
+        def certificateARN = terraformOutputs.tls_certificate_arn.value
 
         sh("""#!/bin/bash
             set -e
@@ -72,6 +73,8 @@ def deployUiTo(environment) {
             export DNS_ZONE="${environment}.internal.smartcolumbusos.com"
             export SUBNETS="${subnets}"
             export SECURITY_GROUPS="${allowInboundTrafficSG}"
+            export INGRESS_SCHEME=internal
+            export CERTIFICATE_ARN="${certificateARN}"
 
             kubectl apply -f k8s/configs/${environment}.yaml
             for manifest in k8s/deployment/*; do
