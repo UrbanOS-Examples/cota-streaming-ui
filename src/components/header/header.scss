@@ -29,8 +29,12 @@ app-header{
       height: 3.5rem;
     }
 
-    .cota-logo {
+    .app-logo {
       height: 100%;
+    }
+
+    .cota-logo {
+      height: 35%;
     }
 
     .conjunction-junction {
@@ -41,10 +45,6 @@ app-header{
         font-size: 1rem;
         margin: 0px .5rem;
       }
-    }
-
-    .app-logo {
-      height: 50%;
     }
   }
 
