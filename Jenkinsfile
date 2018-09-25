@@ -1,9 +1,13 @@
 library(
-    identifier: 'pipeline-lib@4.1.0',
+    identifier: 'pipeline-lib@4.3.0',
     retriever: modernSCM([$class: 'GitSCMSource',
                           remote: 'https://github.com/SmartColumbusOS/pipeline-lib',
                           credentialsId: 'jenkins-github-user'])
 )
+
+properties([
+    pipelineTriggers([scos.dailyBuildTrigger()]),
+])
 
 def image
 def doStageIf = scos.&doStageIf
