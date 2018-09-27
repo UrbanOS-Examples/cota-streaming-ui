@@ -10,6 +10,6 @@ export default () => (
       <div className='conjunction-junction'>+</div>
       <img src={cotaLogo} className='cota-logo' alt='logo' />
     </div>
-    <a className='about-map-button' href='#'>About This Map</a>
+    <a className='about-map-button' target='_blank' href={window.DATA_LOCATION}>About This Map</a>
   </app-header>
 )

@@ -1,23 +1,23 @@
 import React from 'react'
 import RouteFilter from './route-filter'
 import { shallow } from 'enzyme'
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga'
 
 jest.mock('react-ga', () => ({
   event: jest.fn()
 }))
 
 describe('RouteFilter', () => {
-  let subject, routeFilterStub, routeFetchStub, dropdown;
+  let subject, routeFilterStub, routeFetchStub, dropdown
 
   beforeEach(() => {
-    ReactGA.event.mockClear();
+    ReactGA.event.mockClear()
 
-    routeFilterStub = jest.fn();
-    routeFetchStub = jest.fn();
+    routeFilterStub = jest.fn()
+    routeFetchStub = jest.fn()
     subject = shallow(<RouteFilter routeFilter={routeFilterStub} routeFetch={routeFetchStub} />)
     dropdown = subject.find('[id="routeSelect"]')
-  });
+  })
 
   it('passes the selected value to its route filter function', () => {
     dropdown.simulate('change', {value: '001', label: 'whonko'})
@@ -40,7 +40,6 @@ describe('RouteFilter', () => {
     expect(subject.find('[id="routeSelect"]').props().options).toEqual(testAllRoutes.concat(fakeRoutes))
   })
 
-
   describe('Google Analytics', () => {
     it('selecting an item should register google analytics event', () => {
       dropdown.simulate('change', { label: '01 - KENNY/LIVINGSTON' })
@@ -49,7 +48,7 @@ describe('RouteFilter', () => {
         category: 'Navigation',
         action: 'Route Selected',
         label: '01 - KENNY/LIVINGSTON'
-      });
-    });
+      })
+    })
   })
 })
