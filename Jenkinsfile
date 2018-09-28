@@ -28,7 +28,7 @@ node('infrastructure') {
                 image.push()
                 image.push('latest')
             }
-            deployUiTo('dev')
+            deployUiTo(environment: 'dev')
             runSmokeTestAgainst('dev')
         }
 
@@ -36,7 +36,7 @@ node('infrastructure') {
         doStageIfPromoted('Deploy to Staging') {
             def promotionTag = scos.releaseCandidateNumber()
 
-            deployUiTo('staging')
+            deployUiTo(environment: 'staging')
             runSmokeTestAgainst('staging')
 
             scos.applyAndPushGitHubTag(promotionTag)
@@ -50,7 +50,8 @@ node('infrastructure') {
             def releaseTag = env.BRANCH_NAME
             def promotionTag = 'prod'
 
-            deployUiTo('prod')
+            /* change internal to false when we're ready to release */
+            deployUiTo(environment: 'prod', internal: true)
             runSmokeTestAgainst('prod')
 
             scos.applyAndPushGitHubTag(promotionTag)
@@ -64,20 +65,26 @@ node('infrastructure') {
     }
 }
 
-def deployUiTo(environment) {
+def deployUiTo(params = [:]) {
+    def environment = params.get('environment')
+    if (environment == null) throw new IllegalArgumentException("environment must be specified")
+
+    def internal = params.get('internal', true)
+
     scos.withEksCredentials(environment) {
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(', ')
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
         def certificateARN = terraformOutputs.tls_certificate_arn.value
 
+        def ingressScheme = internal ? 'internal' : 'internet-facing'
         sh("""#!/bin/bash
             set -e
             export VERSION="${env.GIT_COMMIT_HASH}"
             export DNS_ZONE="${environment}.internal.smartcolumbusos.com"
             export SUBNETS="${subnets}"
             export SECURITY_GROUPS="${allowInboundTrafficSG}"
-            export INGRESS_SCHEME=internal
+            export INGRESS_SCHEME=${ingressScheme}
             export CERTIFICATE_ARN="${certificateARN}"
 
             kubectl apply -f k8s/configs/${environment}.yaml
