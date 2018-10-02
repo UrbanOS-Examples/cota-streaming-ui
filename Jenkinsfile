@@ -50,8 +50,7 @@ node('infrastructure') {
             def releaseTag = env.BRANCH_NAME
             def promotionTag = 'prod'
 
-            /* change internal to false when we're ready to release */
-            deployUiTo(environment: 'prod', internal: true)
+            deployUiTo(environment: 'prod', internal: false)
             runSmokeTestAgainst('prod')
 
             scos.applyAndPushGitHubTag(promotionTag)
