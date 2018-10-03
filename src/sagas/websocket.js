@@ -1,4 +1,4 @@
-import { call, take, put, race } from 'redux-saga/effects'
+import { call, take, put, race, select } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { Socket } from 'phoenix'
 import { ROUTE_FILTER, positionUpdate } from '../actions'
@@ -9,8 +9,9 @@ export let createSocket = (socketUrl) => {
   return socket
 }
 
-const createChannel = socket => {
-  return socket.channel('vehicle_position')
+const createChannel = function * (socket) {
+  const filters = yield select(state => state.filter)
+  return socket.channel('vehicle_position', { 'vehicle.trip.route_id': filters })
 }
 
 const hasFilterDefined = (array) => {

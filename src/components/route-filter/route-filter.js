@@ -5,19 +5,11 @@ import './route-filter.scss'
 import ReactGA from 'react-ga'
 
 export default class extends React.Component {
-  constructor (props) {
-    super(props)
-    this.ALL_ROUTES = [{ label: 'Filter by lines...' }]
-    this.state = { selectedOption: this.ALL_ROUTES }
-  }
-
   componentDidMount = () => {
     this.props.routeFetch()
   }
 
   handleChange = selectedOption => {
-    this.setState({ selectedOption })
-
     const value = _.flatten([selectedOption])
       .map(option => option.value)
       .filter(option => option)
@@ -32,15 +24,16 @@ export default class extends React.Component {
   }
 
   render = () => {
-    const { selectedOption } = this.state
+    const { routes, selectedRouteId } = this.props
+    const selectedRoute = _.find(routes, {value: selectedRouteId})
 
     return <route-filter>
       <Select
         id='routeSelect'
-        value={selectedOption}
+        value={selectedRoute}
         onChange={this.handleChange}
-        options={this.ALL_ROUTES.concat(this.props.routes)}
-        placeholder='Filter by lines...'
+        options={routes}
+        placeholder=''
         backspaceRemovesValue={false}
       />
     </route-filter>
