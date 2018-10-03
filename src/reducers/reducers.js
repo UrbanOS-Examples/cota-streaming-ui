@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux'
 import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_UPDATE } from '../actions'
 
-const filter = (filter = [], action) => {
+const CMAX_LINE_NUMBER = '101'
+
+const filter = (filter = [CMAX_LINE_NUMBER], action) => {
   switch (action.type) {
     case ROUTE_FILTER:
       return action.filter

@@ -42,9 +42,7 @@ export default class extends React.Component {
           onLocationfound={e => this.handleLocationFound(e)}
         >
           <TileLayer url={`https://{s}.tiles.mapbox.com/styles/v1/mapbox/streets-v10/tiles/{z}/{x}/{y}{r}?access_token=${accessToken}`} />
-          <Loader loaded={this.props.data.length > 0} length={20} radius={15} color='#1C2859' speed={1.2}>
-            {this.props.data.map(it => <RotatedMarker key={it.vehicleId} position={[it.latitude, it.longitude]} rotationAngle={it.bearing} icon={iconFactory.createBusIcon(this.state.zoom)} />)}
-          </Loader>
+          {this.props.data.map(it => <RotatedMarker key={it.vehicleId} position={[it.latitude, it.longitude]} rotationAngle={it.bearing} icon={iconFactory.createBusIcon(this.state.zoom)} />)}
           <ZoomControl position='topright' />
           {marker}
         </Map>
@@ -61,6 +59,6 @@ export default class extends React.Component {
       hasLocation: true,
       latlng: e.latlng
     })
-    this.mapRef.current.leafletElement.setZoomAround(e.latlng, 16, true)
+    this.mapRef.current.leafletElement.setZoomAround(e.latlng, 14, true)
   }
 }

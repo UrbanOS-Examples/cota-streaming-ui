@@ -6,13 +6,19 @@ import { POSITION_UPDATE, ROUTE_FILTER } from '../actions'
 
 jest.mock('phoenix')
 
-const reducer = (state = [], action) => {
-  return [...state, action]
+// This is kinda weird. The filter represents what the state really looks like,
+// but the position event is only used for testing. We really don't have time to
+// clean this up now, but might want to look into it in the future
+const reducer = (state = { filter: ['101'], positionEvent: [] }, action) => {
+  if (action.type === POSITION_UPDATE) {
+    return Object.assign({}, state, { positionEvent: [...state.positionEvent, action] })
+  }
+  return state
 }
 
 describe('websocketSaga', () => {
   let channel, on, push, store
-  beforeEach(() => {
+  beforeEach(async () => {
     channel = jest.fn()
     on = jest.fn()
     push = jest.fn()
@@ -38,8 +44,8 @@ describe('websocketSaga', () => {
 
   it('establishes a connection to socket and channel', () => {
     // global window object doesn't exist when running in node
-    expect(Socket).toBeCalledWith('undefined/socket')
-    expect(channel).toBeCalledWith('vehicle_position')
+    expect(Socket).toHaveBeenCalledWith('undefined/socket')
+    expect(channel).toHaveBeenCalledWith('vehicle_position', { 'vehicle.trip.route_id': ['101'] })
   })
 
   it('puts messages on event bus when position updates come from the server', () => {
@@ -47,7 +53,7 @@ describe('websocketSaga', () => {
     emitter({abc: 'test'})
 
     expect(eventType).toBe('update')
-    expect(store.getState()).toContainEqual({type: POSITION_UPDATE, update: {abc: 'test'}})
+    expect(store.getState().positionEvent).toContainEqual({type: POSITION_UPDATE, update: {abc: 'test'}})
   })
 
   it('pushes a filter to the channel based on a ROUTE_FILTER event', () => {

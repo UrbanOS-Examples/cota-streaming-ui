@@ -8,15 +8,24 @@ jest.mock('react-ga', () => ({
 }))
 
 describe('RouteFilter', () => {
-  let subject, routeFilterStub, routeFetchStub, dropdown
+  let subject, routeFilterStub, routeFetchStub, dropdown, fakeRoutes
 
   beforeEach(() => {
+    fakeRoutes = [{value: 'some cool route', label: 'a label'}, {value: '2', label: 'second route'}]
+
     ReactGA.event.mockClear()
 
     routeFilterStub = jest.fn()
     routeFetchStub = jest.fn()
-    subject = shallow(<RouteFilter routeFilter={routeFilterStub} routeFetch={routeFetchStub} />)
+    subject = shallow(<RouteFilter selectedRouteId={fakeRoutes[0].value}
+      routeFilter={routeFilterStub}
+      routeFetch={routeFetchStub}
+      routes={fakeRoutes} />)
     dropdown = subject.find('[id="routeSelect"]')
+  })
+
+  it('uses the route id passed in to determine it\'s value', () => {
+    expect(dropdown.props().value).toEqual(fakeRoutes[0])
   })
 
   it('passes the selected value to its route filter function', () => {
@@ -29,15 +38,6 @@ describe('RouteFilter', () => {
     dropdown.simulate('change', { label: 'Timmay!' })
 
     expect(routeFilterStub).toBeCalledWith([])
-  })
-
-  it('properly concatenates the routes', () => {
-    const fakeRoutes = [{value: 'some cool route', label: 'a label'}]
-    const testAllRoutes = [{ label: 'Filter by lines...' }]
-
-    subject = shallow(<RouteFilter routes={fakeRoutes} routeFetch={routeFetchStub} />)
-
-    expect(subject.find('[id="routeSelect"]').props().options).toEqual(testAllRoutes.concat(fakeRoutes))
   })
 
   describe('Google Analytics', () => {

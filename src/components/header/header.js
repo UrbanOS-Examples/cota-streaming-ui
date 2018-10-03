@@ -3,7 +3,7 @@ import scosLogo from '../../assets/smrt-columbus.png'
 import cotaLogo from '../../assets/COTA-logo.svg'
 import './header.scss'
 
-const DATA_FEED_PATH = "/data-stories/streaming-data-feed-shows-riders-where-their-bus-is-in-real-time"
+const DATA_FEED_PATH = '/data-stories/streaming-data-feed-shows-riders-where-their-bus-is-in-real-time'
 
 export default () => (
   <app-header>
