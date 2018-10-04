@@ -19,6 +19,13 @@ spec:
       containers:
       - name: cota-streaming-ui
         image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/cota-streaming-ui:${VERSION}
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 100m
+          requests:
+            memory: 256Mi
+            cpu: 100m
         envFrom:
         - configMapRef:
             name: cota-streaming-ui

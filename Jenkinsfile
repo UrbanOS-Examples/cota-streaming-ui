@@ -86,9 +86,10 @@ def deployUiTo(params = [:]) {
             export INGRESS_SCHEME=${ingressScheme}
             export CERTIFICATE_ARN="${certificateARN}"
 
-            kubectl apply -f k8s/configs/${environment}.yaml
+            kubectl get namespaces | egrep '^cota-services ' || kubectl create namespace cota-services
+            kubectl apply -f k8s/configs/${environment}.yaml --namespace cota-services
             for manifest in k8s/deployment/*; do
-                cat \$manifest | envsubst | kubectl apply -f -
+                cat \$manifest | envsubst | kubectl apply -f - --namespace cota-services
             done
         """.trim())
     }
