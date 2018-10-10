@@ -67,6 +67,7 @@
     "enzyme-adapter-react-16": "^1.1.1",
     "identity-obj-proxy": "^3.0.0",
     "node-sass": "^4.9.0",
+    "react-a11y": "^1.0.1",
     "sass-loader": "^7.0.2",
     "standard": "^11.0.1"
   },
@@ -81,10 +82,11 @@
   },
   "jest": {
     "setupFiles": [
+      "<rootDir>/test-helpers/shim.js",
       "<rootDir>/test-helpers/test-start-point.js"
     ],
     "moduleNameMapper": {
-      "\\.(css|scss)$": "identity-obj-proxy",
+      "\\.(css|scss|png)$": "identity-obj-proxy",
       "\\.(svg)$": "<rootDir>/test-helpers/mock-svg-string.js"
     }
   },

@@ -2,7 +2,6 @@ import React, { createRef } from 'react'
 import { Map, TileLayer, ZoomControl, Marker } from 'react-leaflet'
 import RotatedMarker from 'react-leaflet-rotatedmarker'
 import iconFactory from './icon-factory'
-import Loader from 'react-loader'
 import './map.scss'
 
 export default class extends React.Component {
