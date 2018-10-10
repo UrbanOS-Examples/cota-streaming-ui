@@ -6,6 +6,9 @@ This application is dependent on being fed websocket data. The host/port for the
 ## Run Unit Tests
 `npm test`
 
+Unit tests will output warnings relate to accessibility. Configurations
+are found in `test-start-point.js`
+
 ## Lint the Code
 `npm run lint`
 

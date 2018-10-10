@@ -8,9 +8,9 @@ const DATA_FEED_PATH = '/data-stories/streaming-data-feed-shows-riders-where-the
 export default () => (
   <app-header>
     <div className='logos'>
-      <img src={scosLogo} className='app-logo' alt='logo' />
+      <img src={scosLogo} className='app-logo' alt='SCOS' />
       <div className='conjunction-junction'>+</div>
-      <img src={cotaLogo} className='cota-logo' alt='logo' />
+      <img src={cotaLogo} className='cota-logo' alt='COTA' />
     </div>
     <a className='about-map-button' target='_blank' href={window.JOOMLA_HOST + DATA_FEED_PATH}>About This Map</a>
   </app-header>
