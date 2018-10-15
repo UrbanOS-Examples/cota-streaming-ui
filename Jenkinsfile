@@ -1,12 +1,12 @@
 library(
-    identifier: 'pipeline-lib@4.3.0',
+    identifier: 'pipeline-lib@4.3.4',
     retriever: modernSCM([$class: 'GitSCMSource',
                           remote: 'https://github.com/SmartColumbusOS/pipeline-lib',
                           credentialsId: 'jenkins-github-user'])
 )
 
 properties([
-    pipelineTriggers([scos.dailyBuildTrigger()]),
+    pipelineTriggers([scos.dailyBuildTrigger('12-13')]), //UTC
 ])
 
 def image
