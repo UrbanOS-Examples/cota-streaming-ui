@@ -35,6 +35,7 @@ export default class extends React.Component {
         options={routes}
         placeholder=''
         backspaceRemovesValue={false}
+        isSearchable={false}
       />
     </route-filter>
   }
