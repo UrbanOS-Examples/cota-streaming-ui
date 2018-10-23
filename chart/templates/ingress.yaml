@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ .Chart.Name }} #Should this stay cota-ui?
+  name: {{ .Chart.Name }}
   namespace: {{ .Release.Namespace }}
   annotations:
     kubernetes.io/ingress.class: alb

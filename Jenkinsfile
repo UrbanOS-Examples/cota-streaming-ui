@@ -74,7 +74,7 @@ def deployUiTo(params = [:]) {
         sh "kubectl get namespaces | egrep '^cota-services ' || kubectl create namespace cota-services"
 
         def terraformOutputs = scos.terraformOutput(environment)
-        def subnets = terraformOutputs.public_subnets.value.join(', ')
+        def subnets = terraformOutputs.public_subnets.value.join(/\\,/)
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
         def certificateARN = scos.terraformOutput(environment, internal ? 'operating-system' : 'prod').tls_certificate_arn.value
 
