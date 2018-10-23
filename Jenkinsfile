@@ -71,6 +71,8 @@ def deployUiTo(params = [:]) {
     def internal = params.get('internal', true)
 
     scos.withEksCredentials(environment) {
+        sh "kubectl get namespaces | egrep '^cota-services ' || kubectl create namespace cota-services"
+
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(', ')
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
@@ -79,18 +81,16 @@ def deployUiTo(params = [:]) {
         def ingressScheme = internal ? 'internal' : 'internet-facing'
         sh("""#!/bin/bash
             set -e
-            export VERSION="${env.GIT_COMMIT_HASH}"
-            export DNS_ZONE="${environment}.internal.smartcolumbusos.com"
-            export SUBNETS="${subnets}"
-            export SECURITY_GROUPS="${allowInboundTrafficSG}"
-            export INGRESS_SCHEME=${ingressScheme}
-            export CERTIFICATE_ARN="${certificateARN}"
-
-            kubectl get namespaces | egrep '^cota-services ' || kubectl create namespace cota-services
-            kubectl apply -f k8s/configs/${environment}.yaml --namespace cota-services
-            for manifest in k8s/deployment/*; do
-                cat \$manifest | envsubst | kubectl apply -f - --namespace cota-services
-            done
+            helm init --client-only
+            helm upgrade --install cota-streaming-ui ./chart \
+                --namespace=cota-services \
+                --set ingress.enabled="true" \
+                --set ingress.scheme="${ingressScheme}" \
+                --set ingress.subnets="${subnets}" \
+                --set ingress.securityGroups="${allowInboundTrafficSG}" \
+                --set ingress.dnsZone="${environment}.internal.smartcolumbusos.com" \
+                --set ingress.certificateARN="${certificateARN}" \
+                --set image.tag="${env.GIT_COMMIT_HASH}"
         """.trim())
     }
 }
