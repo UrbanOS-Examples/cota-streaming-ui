@@ -6,11 +6,11 @@ google-chrome \
 until grep -qP ".*" test-results.txt; do sleep 1; echo "waiting for DOM"; done
 
 cat test-results.txt
-BUS_AMOUNT=$(grep -o leaflet-marker-icon test-results.txt| wc -l)
+CONTAINER_COUNT=$(grep -o leaflet-container test-results.txt| wc -l)
 
-if [ $BUS_AMOUNT -eq 0 ]
+if [ $CONTAINER_COUNT -eq 0 ]
 then
-    echo "no busses found" && exit 1
+    echo "DOM didn't load" && exit 1
 else
-    echo "got $BUS_AMOUNT busses"
+    echo "got $CONTAINER_COUNT containers"
 fi
