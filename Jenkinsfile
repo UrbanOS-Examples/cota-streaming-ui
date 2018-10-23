@@ -83,6 +83,7 @@ def deployUiTo(params = [:]) {
             set -e
             helm init --client-only
             helm upgrade --install cota-streaming-ui ./chart \
+                --set env="${environment}" \
                 --namespace=cota-services \
                 --set ingress.enabled="true" \
                 --set ingress.scheme="${ingressScheme}" \

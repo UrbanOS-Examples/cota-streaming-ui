@@ -10,7 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/security-groups: {{ .Values.ingress.securityGroups }}
     alb.ingress.kubernetes.io/tags: scos.delete.on.teardown=true
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateARN }}
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80, "HTTPS": 443}]'
 spec:
   rules:
   - host: cota.{{ .Values.ingress.dnsZone }}
