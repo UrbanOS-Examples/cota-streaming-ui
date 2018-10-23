@@ -17,13 +17,15 @@ const reducer = (state = { filter: ['101'], positionEvent: [] }, action) => {
 }
 
 describe('websocketSaga', () => {
-  let channel, on, push, store
+  let channel, on, push, store, onOpen
   beforeEach(async () => {
     channel = jest.fn()
     on = jest.fn()
     push = jest.fn()
+    onOpen = jest.fn()
     Socket.mockImplementation(() => ({
       connect: jest.fn(),
+      onOpen: onOpen,
       channel: channel.mockReturnValue({
         on: on,
         push: push,
@@ -42,10 +44,17 @@ describe('websocketSaga', () => {
     sagaMiddleware.run(sagas)
   })
 
-  it('establishes a connection to socket and channel', () => {
+  it('establishes a connection to socket and channel with an empty filter', () => {
     // global window object doesn't exist when running in node
     expect(Socket).toHaveBeenCalledWith('undefined/socket')
-    expect(channel).toHaveBeenCalledWith('vehicle_position', { 'vehicle.trip.route_id': ['101'] })
+    expect(channel).toHaveBeenCalledWith('vehicle_position', { 'vehicle.trip.route_id': [] })
+  })
+
+  it('sends the current route filter when the socket is opened', () => {
+    const onOpenCallback = onOpen.mock.calls[0][0]
+    onOpenCallback()
+
+    expect(push).toBeCalledWith('filter', {'vehicle.trip.route_id': ['101']})
   })
 
   it('puts messages on event bus when position updates come from the server', () => {
