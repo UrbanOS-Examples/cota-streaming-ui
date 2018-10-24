@@ -71,8 +71,6 @@ def deployUiTo(params = [:]) {
     def internal = params.get('internal', true)
 
     scos.withEksCredentials(environment) {
-        sh "kubectl get namespaces | egrep '^cota-services ' || kubectl create namespace cota-services"
-
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(/\\,/)
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
@@ -83,6 +81,7 @@ def deployUiTo(params = [:]) {
             set -e
             helm init --client-only
             helm upgrade --install cota-streaming-ui ./chart \
+                --namespace cota-services \
                 --set env="${environment}" \
                 --namespace=cota-services \
                 --set ingress.enabled="true" \
