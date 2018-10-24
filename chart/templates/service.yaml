@@ -1,10 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cota-streaming-ui
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
-    app: cota-streaming-ui
+    app: {{ .Chart.Name }}
   ports:
   - protocol: TCP
     port: 80

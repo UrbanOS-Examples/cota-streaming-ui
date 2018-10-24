@@ -1,24 +1,26 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: cota-streaming-ui
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
   labels:
-    app: cota-streaming-ui
+    app: {{ .Chart.Name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: cota-streaming-ui
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: cota-streaming-ui
+        app: {{ .Chart.Name }}
     spec:
       imagePullSecrets:
       - name: regcred
       containers:
-      - name: cota-streaming-ui
-        image: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/cota-streaming-ui:${VERSION}
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         resources:
           limits:
             memory: 256Mi
@@ -28,4 +30,4 @@ spec:
             cpu: 100m
         envFrom:
         - configMapRef:
-            name: cota-streaming-ui
+            name: {{ .Chart.Name }}

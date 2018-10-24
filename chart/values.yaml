@@ -1,0 +1,13 @@
+replicaCount: 1
+env: ""
+image:
+  repository: 199837183662.dkr.ecr.us-east-2.amazonaws.com/scos/cota-streaming-ui
+  tag: latest
+  pullPolicy: IfNotPresent
+ingress:
+  enabled: false
+  scheme: ""
+  subnets: ""
+  securityGroups: ""
+  certificateARN: ""
+  dnsZone: "localhost"
