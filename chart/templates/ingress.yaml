@@ -12,6 +12,9 @@ metadata:
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateARN }}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80, "HTTPS": 443}]'
 spec:
+  backend:
+    serviceName: {{ .Chart.Name }}
+    servicePort: {{ .Values.service.port  }}
   rules:
   - host: cota.{{ .Values.ingress.dnsZone }}
     http:
@@ -19,4 +22,4 @@ spec:
       - path: /
         backend:
           serviceName: {{ .Chart.Name }}
-          servicePort: 80
+          servicePort: {{ .Values.service.port  }}
