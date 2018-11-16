@@ -9,6 +9,9 @@ metadata:
     alb.ingress.kubernetes.io/security-groups: ${SECURITY_GROUPS}
     alb.ingress.kubernetes.io/tags: scos.delete.on.teardown=true
 spec:
+  backend:
+    serviceName: cota-streaming-ui
+    servicePort: 80
   rules:
   - host: cota.${DNS_ZONE}
     http:
