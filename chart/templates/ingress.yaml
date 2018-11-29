@@ -17,6 +17,13 @@ spec:
     serviceName: {{ .Chart.Name }}
     servicePort: {{ .Values.service.port  }}
   rules:
+  - host: cota.smartcolumbusos.com
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: redirect
+          servicePort: use-annotation
   - host: cota.{{ .Values.ingress.dnsZone }}
     http:
       paths:
