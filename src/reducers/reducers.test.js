@@ -124,7 +124,30 @@ describe('cotaApp reducers', () => {
     ]
 
     let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
-    expect(newState.routes).toEqual(state)
+    expect(newState.routes[0]).toEqual(state[0])
+    expect(newState.routes[1]).toEqual(state[1])
+  })
+
+  it('will append CEAV Shuttle on a ROUTE_UPDATE action', () => {
+    let message = {
+      'help': 'not necessary',
+      'success': true,
+      'result': {
+        'records': [
+          {
+            'LINENUM': '1',
+            'LINENAME': 'Crazy Town'
+          },
+          {
+            'LINENUM': '101',
+            'LINENAME': 'Smallville'
+          }
+        ]
+      }
+    }
+
+    let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
+    expect(newState.routes[2]).toEqual({value: '999', label: 'CEAV Shuttle'})
   })
 
   it('will not transform the routes on an unknown event', () => {

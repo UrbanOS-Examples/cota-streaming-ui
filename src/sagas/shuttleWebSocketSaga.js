@@ -1,7 +1,7 @@
 import { call, take, put, race, select } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { Socket } from 'phoenix'
-import { ROUTE_FILTER, positionUpdate } from '../actions'
+import { CEAV_FILTER, ROUTE_FILTER, positionUpdate } from '../actions'
 
 /*
   socket.onOpen is sending the existing filters when the socket is opened.
@@ -18,6 +18,8 @@ export let createSocket = (socketUrl) => {
 }
 
 const createChannel = function * (socket) {
+  const ceav = 'streaming:ceav-vehicle-locations';
+  const cota = 'streaming:cota-vehicle-positions';
   const channel = socket.channel('vehicle_position', { 'vehicle.trip.route_id': [] })
   localStateFilters = yield select(state => state.filter)
   socket.onOpen(() => sendFilter(channel))
@@ -52,14 +54,14 @@ const createEventChannel = channel => {
 const fromServer = function * (eventChannel) {
   while (true) {
     const message = yield take(eventChannel)
-    message.vehicle.provider = 'COTA'
+    message.vehicle.provider = 'CEAV'
     yield put(positionUpdate(message))
   }
 }
 
 const fromEventBus = function * (channel) {
   while (true) {
-    const action = yield take(ROUTE_FILTER)
+    const action = yield take(CEAV_FILTER)
     localStateFilters = action.filter
 
     yield call(sendFilter, channel)
