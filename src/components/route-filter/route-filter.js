@@ -14,15 +14,7 @@ export default class extends React.Component {
       .map(option => option.value)
       .filter(option => option)
 
-      // this.props.ceavFilter(value)
-      // this.props.routeFilter(value)
-      if('001' === value[0]) {
-        this.props.ceavFilter(value)
-        this.props.routeFilter(['-1'])
-      } else {
-        this.props.routeFilter(value)
-        this.props.ceavFilter(['-1'])
-      }
+      this.props.routeFilter(value)
 
     ReactGA.event({
       category: 'Navigation',

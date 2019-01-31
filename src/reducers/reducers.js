@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { POSITION_UPDATE, ROUTE_FILTER, CEAV_FILTER, ROUTE_UPDATE } from '../actions'
+import { POSITION_UPDATE, ROUTE_FILTER, CEAV_FILTER, CEAV_UPDATE, ROUTE_UPDATE } from '../actions'
 
 const CMAX_LINE_NUMBER = '101'
 
@@ -11,6 +11,18 @@ const filter = (filter = [CMAX_LINE_NUMBER], action) => {
       return action.filter
     default:
       return filter
+  }
+}
+
+const provider = (provider = {name: "COTA"}, action) => {
+  switch (action.type) {
+    case ROUTE_FILTER:
+      if("CEAV" === action.filter[0]) {
+        return Object.assign({}, provider, {name: "CEAV"})
+      }
+      return Object.assign({}, provider, {name: "COTA"})
+    default:
+      return provider
   }
 }
 
@@ -29,19 +41,19 @@ const data = (data = {}, action) => {
       }
 
       return Object.assign({}, data, {[value.vehicleId]: value})
-    // case 'CEAV_FILTER'://TODO: CHANGE TO CONSTANT
-    //   let vehicle1 = action.update.vehicle
-    //     let value1 = {
-    //       vehicleId: vehicle1.vehicle.id,
-    //       routeId: vehicle1.trip.route_id,
-    //       latitude: vehicle1.position.latitude,
-    //       longitude: vehicle1.position.longitude,
-    //       bearing: vehicle1.position.bearing || 0,
-    //       timestamp: vehicle1.timestamp * 1000,
-    //       provider: vehicle1.provider
-    //     }
+    case CEAV_UPDATE:
+      let vehicle1 = action.update.vehicle
+        let value1 = {
+          vehicleId: vehicle1.vehicle.id,
+          routeId: vehicle1.trip.route_id,
+          latitude: vehicle1.position.latitude,
+          longitude: vehicle1.position.longitude,
+          bearing: vehicle1.position.bearing || 0,
+          timestamp: vehicle1.timestamp * 1000,
+          provider: vehicle1.provider
+        }
 
-    //   return Object.assign({}, data, {[value.vehicleId]: value1})
+      return Object.assign({}, data, {[value1.vehicleId]: value1})
     case ROUTE_FILTER:
       return {}
     case CEAV_FILTER:
@@ -59,7 +71,7 @@ const routes = (routes = [], action) => {
         const lineName = `${route.LINENUM} - ${route.LINENAME}`
         return {value: lineNumber, label: lineName, provider: 'COTA'}
       })
-      routesToUse.push({value: '999', label: 'CEAV Shuttle', provider: 'CEAV'})
+      routesToUse.push({value: 'CEAV', label: 'CEAV Shuttle', provider: 'CEAV'})
       return routesToUse;
     default:
       return routes
@@ -69,5 +81,6 @@ const routes = (routes = [], action) => {
 export default combineReducers({
   filter,
   data,
-  routes
+  routes,
+  provider
 })
