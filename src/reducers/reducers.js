@@ -1,13 +1,11 @@
 import { combineReducers } from 'redux'
-import { POSITION_UPDATE, ROUTE_FILTER, CEAV_FILTER, CEAV_UPDATE, ROUTE_UPDATE } from '../actions'
+import { POSITION_UPDATE, ROUTE_FILTER, CEAV_UPDATE, ROUTE_UPDATE } from '../actions'
 
 const CMAX_LINE_NUMBER = '101'
 
 const filter = (filter = [CMAX_LINE_NUMBER], action) => {
   switch (action.type) {
     case ROUTE_FILTER:
-      return action.filter
-    case CEAV_FILTER:
       return action.filter
     default:
       return filter
@@ -55,8 +53,6 @@ const data = (data = {}, action) => {
 
       return Object.assign({}, data, {[value1.vehicleId]: value1})
     case ROUTE_FILTER:
-      return {}
-    case CEAV_FILTER:
       return {}
     default:
       return data

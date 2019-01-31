@@ -7,8 +7,6 @@ export const ROUTE_FETCH = 'ROUTE_FETCH'
 
 export const ROUTE_UPDATE = 'ROUTE_UPDATE'
 
-export const CEAV_FILTER = 'CEAV_FILTER'
-
 export const CEAV_UPDATE = 'CEAV_UPDATE'
 
 export const positionUpdate = (message) => {
@@ -21,10 +19,6 @@ export const ceavUpdate = (message) => {
 
 export const routeFilter = (filter) => {
   return { type: ROUTE_FILTER, filter: filter }
-}
-
-export const ceavFilter = (filter) => {
-  return { type: CEAV_FILTER, filter: filter }
 }
 
 export const routeFetch = () => {
