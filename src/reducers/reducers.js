@@ -41,18 +41,16 @@ const data = (data = {}, action) => {
 
       return Object.assign({}, data, {[value.vehicleId]: value})
     case CEAV_UPDATE:
-      let vehicle1 = action.update.vehicle
-        let value1 = {
-          vehicleId: vehicle1.vehicle.id,
-          routeId: vehicle1.trip.route_id,
-          latitude: vehicle1.position.latitude,
-          longitude: vehicle1.position.longitude,
-          bearing: vehicle1.position.bearing || 0,
-          timestamp: vehicle1.timestamp * 1000,
-          provider: vehicle1.provider
+      let ceavVehicle = action.update
+        let busToPutOnMap = {
+          vehicleId: ceavVehicle.vehicle_id,
+          latitude: ceavVehicle.latitude,
+          longitude: ceavVehicle.longitude,
+          timestamp: ceavVehicle.update_time,
+          provider: ceavVehicle.provider
         }
 
-      return Object.assign({}, data, {[value1.vehicleId]: value1})
+      return Object.assign({}, data, {[busToPutOnMap.vehicleId]: busToPutOnMap})
     case ROUTE_FILTER:
       return {}
     default:
