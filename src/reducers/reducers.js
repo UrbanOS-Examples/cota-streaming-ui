@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import { POSITION_UPDATE, ROUTE_FILTER, CEAV_UPDATE, ROUTE_UPDATE } from '../actions'
+import { CEAV, COTA } from '../variables'
 
 const CMAX_LINE_NUMBER = '101'
 
@@ -12,13 +13,13 @@ const filter = (filter = [CMAX_LINE_NUMBER], action) => {
   }
 }
 
-const provider = (provider = {name: "COTA"}, action) => {
+const provider = (provider = {name: COTA}, action) => {
   switch (action.type) {
     case ROUTE_FILTER:
-      if("CEAV" === action.filter[0]) {
-        return Object.assign({}, provider, {name: "CEAV"})
+      if(CEAV === action.filter[0]) {
+        return Object.assign({}, provider, {name: CEAV})
       }
-      return Object.assign({}, provider, {name: "COTA"})
+      return Object.assign({}, provider, {name: COTA})
     default:
       return provider
   }
@@ -67,7 +68,7 @@ const routes = (routes = [], action) => {
         const lineName = `${route.LINENUM} - ${route.LINENAME}`
         return {value: lineNumber, label: lineName, provider: 'COTA'}
       })
-      routesToUse.push({value: 'CEAV', label: 'CEAV Shuttle', provider: 'CEAV'})
+      routesToUse.push({value: CEAV, label: 'CEAV Shuttle', provider: CEAV})
       return routesToUse;
     default:
       return routes

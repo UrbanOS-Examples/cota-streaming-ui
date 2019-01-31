@@ -1,7 +1,8 @@
 import { call, take, put, race, select } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { Socket } from 'phoenix'
-import { ROUTE_FILTER, ceavUpdate } from '../actions'
+import { ceavUpdate } from '../actions'
+import { CEAV } from '../variables'
 
 /*
   socket.onOpen is sending the existing filters when the socket is opened.
@@ -9,7 +10,6 @@ import { ROUTE_FILTER, ceavUpdate } from '../actions'
   This needs to be global state because socket.onOpen can not take a generator function,
   which is required to be executed to get data out of the Redux state
  */
-let localStateFilters = []
 
 export let createSocket = (socketUrl) => {
   let socket = new Socket(socketUrl)
@@ -17,23 +17,10 @@ export let createSocket = (socketUrl) => {
   return socket
 }
 
-const createChannel = function * (socket) {
+const createChannel = (socket) => {
   // const ceav = 'streaming:ceav-vehicle-locations';
   // const cota = 'streaming:cota-vehicle-positions';
-  const channel = socket.channel('vehicle_position', { 'vehicle.trip.route_id': [] })
-  localStateFilters = yield select(state => state.filter)
-  socket.onOpen(() => sendFilter(channel))
-
-  return channel
-}
-
-const hasFilterDefined = (array) => {
-  return Array.isArray(array) && array.length > 0
-}
-
-const sendFilter = (channel) => {
-  const filter = hasFilterDefined(localStateFilters) ? { 'vehicle.trip.route_id': '001' } : {}
-  channel.push('filter', filter)
+  return socket.channel('vehicle_position', {})
 }
 
 const unsubscribe = () => { }
@@ -54,21 +41,12 @@ const createEventChannel = channel => {
 const fromServer = function * (eventChannel) {
   while (true) {
     const message = yield take(eventChannel)
-    message.vehicle.provider = 'CEAV'
+    message.vehicle.provider = CEAV
 
     let provider = yield select(state => state.provider.name)
-    if(provider === 'CEAV') {
+    if(provider === CEAV) {
       yield put(ceavUpdate(message))
     }
-  }
-}
-
-const fromEventBus = function * (channel) {
-  while (true) {
-    const action = yield take(ROUTE_FILTER)
-    localStateFilters = action.filter
-
-    yield call(sendFilter, channel)
   }
 }
 
@@ -77,5 +55,5 @@ export default function * websocketSaga () {
   const channel = yield call(createChannel, socket)
   const eventChannel = yield call(createEventChannel, channel)
 
-  yield race([call(fromEventBus, channel), call(fromServer, eventChannel)])
+  yield race([call(fromServer, eventChannel)])
 }

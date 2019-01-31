@@ -2,6 +2,7 @@ import { call, take, put, race, select } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { Socket } from 'phoenix'
 import { ROUTE_FILTER, positionUpdate } from '../actions'
+import { COTA } from '../variables'
 
 /*
   socket.onOpen is sending the existing filters when the socket is opened.
@@ -52,8 +53,8 @@ const createEventChannel = channel => {
 const fromServer = function * (eventChannel) {
   while (true) {
     const message = yield take(eventChannel)
-    if(message.vehicle != undefined) {
-      message.vehicle.provider = 'COTA'
+    if(message.vehicle !== undefined) {
+      message.vehicle.provider = COTA
     }
     
     yield put(positionUpdate(message))
