@@ -52,7 +52,10 @@ const createEventChannel = channel => {
 const fromServer = function * (eventChannel) {
   while (true) {
     const message = yield take(eventChannel)
-    message.vehicle.provider = 'COTA'
+    if(message.vehicle != undefined) {
+      message.vehicle.provider = 'COTA'
+    }
+    
     yield put(positionUpdate(message))
   }
 }

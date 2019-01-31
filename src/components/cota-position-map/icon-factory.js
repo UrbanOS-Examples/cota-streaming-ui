@@ -1,12 +1,11 @@
 import leaflet from 'leaflet'
-import busSvg from '../../assets/blue-bus.svg'
+import busBlueSvg from '../../assets/blue-bus.svg'
 import busGreenSvg from '../../assets/green-bus.svg'
 import locationPin from '../../assets/ic_location-dot.svg'
 
 const createBusIcon = (zoomLevel, provider) => {
-  let iconUrl = busSvg;
+  let iconUrl = busBlueSvg;
   if('CEAV' === provider) {
-    console.log('CEAV..........')
     iconUrl = busGreenSvg
   }
   

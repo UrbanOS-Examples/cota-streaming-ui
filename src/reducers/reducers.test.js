@@ -119,8 +119,8 @@ describe('cotaApp reducers', () => {
     }
 
     let state = [
-      {value: '001', label: '1 - Crazy Town'},
-      {value: '101', label: '101 - Smallville'}
+      {value: '001', label: '1 - Crazy Town', provider: "COTA"},
+      {value: '101', label: '101 - Smallville', provider: "COTA"}
     ]
 
     let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
@@ -147,7 +147,7 @@ describe('cotaApp reducers', () => {
     }
 
     let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
-    expect(newState.routes[2]).toEqual({value: '999', label: 'CEAV Shuttle'})
+    expect(newState.routes[2]).toEqual({value: 'CEAV', label: 'CEAV Shuttle', provider: 'CEAV'})
   })
 
   it('will not transform the routes on an unknown event', () => {
