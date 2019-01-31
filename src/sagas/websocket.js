@@ -19,7 +19,7 @@ export let createSocket = (socketUrl) => {
 }
 
 const createChannel = function * (socket) {
-  const channel = socket.channel('vehicle_position', { 'vehicle.trip.route_id': [] })
+  const channel = socket.channel('streaming:cota-vehicle-positions', { 'vehicle.trip.route_id': [] })
   localStateFilters = yield select(state => state.filter)
   socket.onOpen(() => sendFilter(channel))
 

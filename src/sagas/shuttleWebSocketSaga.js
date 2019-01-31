@@ -18,9 +18,7 @@ export let createSocket = (socketUrl) => {
 }
 
 const createChannel = (socket) => {
-  // const ceav = 'streaming:ceav-vehicle-locations';
-  // const cota = 'streaming:cota-vehicle-positions';
-  return socket.channel('vehicle_position', {})
+  return socket.channel('streaming:ceav-vehicle-locations', {})
 }
 
 const unsubscribe = () => { }
