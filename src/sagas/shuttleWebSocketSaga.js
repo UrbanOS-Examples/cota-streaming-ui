@@ -48,7 +48,7 @@ const fromServer = function * (eventChannel) {
   }
 }
 
-export default function * websocketSaga () {
+export default function * shuttleWebSocketSaga () {
   const socket = yield call(createSocket, `${window.WEBSOCKET_HOST}/socket`)
   const channel = yield call(createChannel, socket)
   const eventChannel = yield call(createEventChannel, channel)
