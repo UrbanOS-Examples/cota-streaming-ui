@@ -17,7 +17,7 @@ export let createSocket = (socketUrl) => {
   return socket
 }
 
-const createChannel = function * (socket) {
+const createChannel = (socket) => {
   return socket.channel('streaming:ceav-vehicle-locations', {})
 }
 
