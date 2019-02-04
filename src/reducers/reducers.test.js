@@ -128,7 +128,7 @@ describe('cotaApp reducers', () => {
     expect(newState.routes[1]).toEqual(state[1])
   })
 
-  it('will append CEAV Shuttle on a ROUTE_UPDATE action', () => {
+  it('will append CEAV Smart Circuit on a ROUTE_UPDATE action', () => {
     let message = {
       'help': 'not necessary',
       'success': true,

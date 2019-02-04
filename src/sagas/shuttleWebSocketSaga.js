@@ -1,7 +1,7 @@
 import { call, take, put, race, select } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { Socket } from 'phoenix'
-import { ceavUpdate } from '../actions'
+import { ceavUpdate, ROUTE_FILTER } from '../actions'
 import { CEAV } from '../variables'
 
 /*
@@ -17,8 +17,12 @@ export let createSocket = (socketUrl) => {
   return socket
 }
 
-const createChannel = (socket) => {
+const createChannel = function * (socket) {
   return socket.channel('streaming:ceav-vehicle-locations', {})
+}
+
+const sendFilter = (channel) => {
+  channel.push('filter', {})
 }
 
 const unsubscribe = () => { }
@@ -50,10 +54,19 @@ const fromServer = function * (eventChannel) {
   }
 }
 
+const fromEventBus = function * (channel) {
+  while (true) {
+    const action = yield take(ROUTE_FILTER)
+    if(CEAV === action.filter[0]) {
+      yield call(sendFilter, channel)
+    }
+  }
+}
+
 export default function * shuttleWebSocketSaga () {
   const socket = yield call(createSocket, `${window.WEBSOCKET_HOST}/socket`)
   const channel = yield call(createChannel, socket)
   const eventChannel = yield call(createEventChannel, channel)
 
-  yield race([call(fromServer, eventChannel)])
+  yield race([call(fromEventBus, channel), call(fromServer, eventChannel)])
 }
