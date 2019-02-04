@@ -147,7 +147,7 @@ describe('cotaApp reducers', () => {
     }
 
     let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
-    expect(newState.routes[2]).toEqual({value: 'CEAV', label: 'CEAV Shuttle', provider: 'CEAV'})
+    expect(newState.routes[2]).toEqual({value: 'CEAV', label: 'CEAV Smart Circuit', provider: 'CEAV'})
   })
 
   it('will not transform the routes on an unknown event', () => {
