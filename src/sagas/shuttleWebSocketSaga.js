@@ -39,7 +39,9 @@ const createEventChannel = channel => {
 const fromServer = function * (eventChannel) {
   while (true) {
     const message = yield take(eventChannel)
-    message.vehicle.provider = CEAV
+    if(message !== undefined) {
+      message.provider = CEAV
+    }
 
     let provider = yield select(state => state.provider.name)
     if(provider === CEAV) {

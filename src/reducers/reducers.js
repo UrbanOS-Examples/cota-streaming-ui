@@ -47,7 +47,8 @@ const data = (data = {}, action) => {
           latitude: ceavVehicle.latitude,
           longitude: ceavVehicle.longitude,
           timestamp: ceavVehicle.update_time,
-          provider: ceavVehicle.provider
+          provider: ceavVehicle.provider,
+          bearing: 0
         }
 
       return Object.assign({}, data, {[busToPutOnMap.vehicleId]: busToPutOnMap})
