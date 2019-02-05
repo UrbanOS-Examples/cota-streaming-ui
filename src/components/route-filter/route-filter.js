@@ -14,7 +14,7 @@ export default class extends React.Component {
       .map(option => option.value)
       .filter(option => option)
 
-    this.props.routeFilter(value)
+      this.props.routeFilter(value)
 
     ReactGA.event({
       category: 'Navigation',

@@ -119,12 +119,35 @@ describe('cotaApp reducers', () => {
     }
 
     let state = [
-      {value: '001', label: '1 - Crazy Town'},
-      {value: '101', label: '101 - Smallville'}
+      {value: '001', label: '1 - Crazy Town', provider: "COTA"},
+      {value: '101', label: '101 - Smallville', provider: "COTA"}
     ]
 
     let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
-    expect(newState.routes).toEqual(state)
+    expect(newState.routes[0]).toEqual(state[0])
+    expect(newState.routes[1]).toEqual(state[1])
+  })
+
+  it('will append CEAV Smart Circuit on a ROUTE_UPDATE action', () => {
+    let message = {
+      'help': 'not necessary',
+      'success': true,
+      'result': {
+        'records': [
+          {
+            'LINENUM': '1',
+            'LINENAME': 'Crazy Town'
+          },
+          {
+            'LINENUM': '101',
+            'LINENAME': 'Smallville'
+          }
+        ]
+      }
+    }
+
+    let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
+    expect(newState.routes[2]).toEqual({value: 'CEAV', label: 'CEAV Smart Circuit', provider: 'CEAV'})
   })
 
   it('will not transform the routes on an unknown event', () => {
