@@ -67,7 +67,7 @@ const routes = (routes = [], action) => {
         const lineName = `${route.LINENUM} - ${route.LINENAME}`
         return {value: lineNumber, label: lineName, provider: 'COTA'}
       })
-      routesToUse.push({value: CEAV, label: 'CEAV Smart Circuit', provider: CEAV})
+      routesToUse.push({value: CEAV, label: 'SMRT - Smart Circuit', provider: CEAV})
       return routesToUse;
     default:
       return routes
