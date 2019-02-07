@@ -74,7 +74,7 @@ def deployUiTo(params = [:]) {
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(/\\,/)
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
-        def certificateARN = internal ? terraformOutputs.tls_certificate_arn.value : terraformOutputs.root_tls_certificate_arn.value
+        def certificateARN = terraformOutputs.root_tls_certificate_arn.value
         def ingressScheme = internal ? 'internal' : 'internet-facing'
         sh("""#!/bin/bash
             set -e
@@ -98,9 +98,15 @@ def runSmokeTestAgainst(environment) {
     dir('smoke-test') {
         def smoker = docker.build("cota-smoke-test")
 
+        //TODO: change this to use terraform output root_dns_zone_name.  Currently there is a bug with terraform and the prod dns has a . on the end
+        def envUrlMap = [
+            "dev": "dev-smartos.com",
+            "staging": "staging-smartos.com",
+            "prod": "smartcolumbusos.com"
+        ]
         retry(60) {
             sleep(time: 5, unit: 'SECONDS')
-            smoker.withRun("-e ENDPOINT_URL=cota.${environment}.internal.smartcolumbusos.com") { container ->
+            smoker.withRun("-e ENDPOINT_URL=cota.${envUrlMap[environment]}") { container ->
                 sh "docker logs -f ${container.id}"
                 sh "exit \$(docker inspect ${container.id} --format='{{.State.ExitCode}}')"
             }
