@@ -19,7 +19,7 @@ export let createSocket = (socketUrl) => {
 }
 
 const createChannel = function * (socket) {
-  const channel = socket.channel('streaming:cota-vehicle-positions', { 'vehicle.trip.route_id': [] })
+    const channel = socket.channel('streaming:central_ohio_transit_authority__cota_stream', { 'vehicle.trip.route_id': [] })
   localStateFilters = yield select(state => state.filter)
   socket.onOpen(() => sendFilter(channel))
 
@@ -56,7 +56,7 @@ const fromServer = function * (eventChannel) {
     if(message.vehicle !== undefined) {
       message.vehicle.provider = COTA
     }
-    
+
     yield put(positionUpdate(message))
   }
 }

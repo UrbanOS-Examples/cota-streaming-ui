@@ -18,7 +18,7 @@ export let createSocket = (socketUrl) => {
 }
 
 const createChannel = (socket) => {
-  return socket.channel('streaming:ceav-vehicle-locations', {})
+  return socket.channel('streaming:may_mobility__connected_electric_autonomous_vehicle_locations', {})
 }
 
 const sendFilter = (channel) => {
