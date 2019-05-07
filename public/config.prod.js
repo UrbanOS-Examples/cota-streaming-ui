@@ -1,2 +1,2 @@
-window.WEBSOCKET_HOST = 'wss://streaming.smartcolumbusos.com'
+window.WEBSOCKET_HOST = 'wss://streams.smartcolumbusos.com'
 window.JOOMLA_HOST = 'https://www.smartcolumbusos.com'
