@@ -3,12 +3,12 @@ import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_FETCH, ROUTE_UPDATE } from '../act
 
 describe('cotaApp reducers', () => {
   it('will save the filter when processing a ROUTE_FILTER action', () => {
-    let newState = reducer(undefined, {type: ROUTE_FILTER, filter: ['route1']})
+    let newState = reducer(undefined, { type: ROUTE_FILTER, filter: ['route1'] })
     expect(newState.filter).toEqual(['route1'])
   })
 
   it('will not modify the filter on a unknown event', () => {
-    let newState = reducer({filter: ['yahtzee']}, {type: 'UNKNOWN_ACTION', stuff: []})
+    let newState = reducer({ filter: ['yahtzee'] }, { type: 'UNKNOWN_ACTION', stuff: [] })
     expect(newState.filter).toEqual(['yahtzee'])
   })
 
@@ -47,7 +47,7 @@ describe('cotaApp reducers', () => {
       }
     }
 
-    let newState = reducer(undefined, {type: POSITION_UPDATE, update: message})
+    let newState = reducer(undefined, { type: POSITION_UPDATE, update: message })
     expect(newState.data).toEqual(state)
   })
 
@@ -62,12 +62,12 @@ describe('cotaApp reducers', () => {
         timestamp: 0
       }
     }
-    let newState = reducer(undefined, {type: POSITION_UPDATE, update: message})
+    let newState = reducer(undefined, { type: POSITION_UPDATE, update: message })
     expect(newState.data['1234'].bearing).toEqual(0)
   })
 
   it('will not transform the payload on an unknown event', () => {
-    let newState = reducer({data: ['yahtzee']}, {type: 'UNKNOWN_ACTION', stuff: []})
+    let newState = reducer({ data: ['yahtzee'] }, { type: 'UNKNOWN_ACTION', stuff: [] })
     expect(newState.data).toEqual(['yahtzee'])
   })
 
@@ -96,7 +96,7 @@ describe('cotaApp reducers', () => {
 
     let expectedData = {}
 
-    let newState = reducer(currentState, {type: 'ROUTE_FILTER', filter: ['003']})
+    let newState = reducer(currentState, { type: 'ROUTE_FILTER', filter: ['003'] })
     expect(newState.data).toEqual(expectedData)
   })
 
@@ -119,13 +119,13 @@ describe('cotaApp reducers', () => {
     }
 
     let state = [
-      {value: '001', label: '1 - Crazy Town', provider: "COTA"},
-      {value: '101', label: '101 - Smallville', provider: "COTA"}
+      { value: '001', label: '1 - Crazy Town', provider: 'COTA' },
+      { value: '101', label: '101 - Smallville', provider: 'COTA' }
     ]
 
-    let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
-    expect(newState.routes[0]).toEqual(state[0])
-    expect(newState.routes[1]).toEqual(state[1])
+    let newState = reducer(undefined, { type: ROUTE_UPDATE, update: message })
+    expect(newState.availableRoutes[0]).toEqual(state[0])
+    expect(newState.availableRoutes[1]).toEqual(state[1])
   })
 
   it('will append CEAV Smart Circuit on a ROUTE_UPDATE action', () => {
@@ -146,27 +146,27 @@ describe('cotaApp reducers', () => {
       }
     }
 
-    let newState = reducer(undefined, {type: ROUTE_UPDATE, update: message})
-    expect(newState.routes[2]).toEqual({value: 'CEAV', label: 'SMRT - Smart Circuit', provider: 'CEAV'})
+    let newState = reducer(undefined, { type: ROUTE_UPDATE, update: message })
+    expect(newState.availableRoutes[2]).toEqual({ value: 'CEAV', label: 'SMRT - Smart Circuit', provider: 'CEAV' })
   })
 
-  it('will not transform the routes on an unknown event', () => {
-    let newState = reducer({routes: [{value: '001', label: '1 - Crazy Town'}]}, {type: 'UNKNOWN_ACTION', stuff: []})
-    expect(newState.routes).toEqual([{value: '001', label: '1 - Crazy Town'}])
+  it('will not transform the availableRoutes on an unknown event', () => {
+    let newState = reducer({ availableRoutes: [{ value: '001', label: '1 - Crazy Town' }] }, { type: 'UNKNOWN_ACTION', stuff: [] })
+    expect(newState.availableRoutes).toEqual([{ value: '001', label: '1 - Crazy Town' }])
   })
 
-  it('will should not remove all routes on route fetch action', () => {
-    const routes = [
+  it('will should not remove all availableRoutes on route fetch action', () => {
+    const availableRoutes = [
       { value: '001', label: '1 - Crazy Town' },
       { value: '101', label: '101 - Smallville' }
     ]
     let currentState = {
       filter: {},
       data: {},
-      routes: routes
+      availableRoutes: availableRoutes
     }
 
-    let newState = reducer(currentState, {type: ROUTE_FETCH})
-    expect(newState.routes).toEqual(routes)
+    let newState = reducer(currentState, { type: ROUTE_FETCH })
+    expect(newState.availableRoutes).toEqual(availableRoutes)
   })
 })

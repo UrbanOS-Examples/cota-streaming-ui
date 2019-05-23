@@ -1,7 +1,7 @@
 @import '../../styles/variables.scss';
 @import '../../styles/mixins.scss';
 
-route-filter {
+dropdown-route-filter {
     @include flex-row();
     text-align: left;
     z-index: 10;

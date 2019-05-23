@@ -47,7 +47,7 @@ describe('websocketSaga', () => {
   it('establishes a connection to socket and channel with an empty filter', () => {
     // global window object doesn't exist when running in node
     expect(Socket).toHaveBeenCalledWith('undefined/socket')
-      expect(channel).toHaveBeenCalledWith('streaming:central_ohio_transit_authority__cota_stream', { 'vehicle.trip.route_id': [] })
+    expect(channel).toHaveBeenCalledWith('streaming:central_ohio_transit_authority__cota_stream', { 'vehicle.trip.route_id': [] })
   })
 
   it('sends the current route filter when the socket is opened', () => {

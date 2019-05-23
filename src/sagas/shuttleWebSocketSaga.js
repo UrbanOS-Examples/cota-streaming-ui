@@ -43,12 +43,12 @@ const createEventChannel = channel => {
 const fromServer = function * (eventChannel) {
   while (true) {
     const message = yield take(eventChannel)
-    if(message !== undefined) {
+    if (message !== undefined) {
       message.provider = CEAV
     }
 
     let provider = yield select(state => state.provider.name)
-    if(provider === CEAV) {
+    if (provider === CEAV) {
       yield put(ceavUpdate(message))
     }
   }
@@ -57,7 +57,7 @@ const fromServer = function * (eventChannel) {
 const fromEventBus = function * (channel) {
   while (true) {
     const action = yield take(ROUTE_FILTER)
-    if(CEAV === action.filter[0]) {
+    if (CEAV === action.filter[0]) {
       yield call(sendFilter, channel)
     }
   }

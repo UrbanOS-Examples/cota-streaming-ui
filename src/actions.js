@@ -17,11 +17,11 @@ export const ceavUpdate = (message) => {
   return { type: CEAV_UPDATE, update: message }
 }
 
-export const routeFilter = (filter) => {
+export const applyStreamFilter = (filter) => {
   return { type: ROUTE_FILTER, filter: filter }
 }
 
-export const routeFetch = () => {
+export const fetchAvailableRoutes = () => {
   return { type: ROUTE_FETCH }
 }
 
