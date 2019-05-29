@@ -13,7 +13,7 @@ export default () => (
     <div className='main-content'>
       <Router>
         <DropdownRouteFilter />
-        <Route path="/:routeId?" component={UrlRouteFilter} />
+        <Route path='/:routeId?' component={UrlRouteFilter} />
         <COTAPositionMap />
       </Router>
     </div>
