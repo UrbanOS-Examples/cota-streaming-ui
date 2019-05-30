@@ -14,7 +14,7 @@ export default class extends React.Component {
     return this.props.applyStreamFilter([id])
   }
 
-  routeIsValid = (id) => {
+  routeIsNotValid = (id) => {
     return _.find(this.props.availableRoutes, { value: id }) === undefined
   }
 
@@ -24,10 +24,11 @@ export default class extends React.Component {
     const stateAndUrlOutOfSync = selectedRouteId !== urlRouteId
     const stateWasUpdated = selectedRouteId !== previousProps.selectedRouteId
 
-    if (this.routeIsValid(urlRouteId)) {
+    if (this.routeIsNotValid(urlRouteId)) {
       this.updateState(defaultRouteId)
       return this.updateUrl(defaultRouteId)
     }
+
     if (stateAndUrlOutOfSync) {
       if (stateWasUpdated) {
         return this.updateUrl(selectedRouteId)
