@@ -25,23 +25,9 @@ describe('UrlRouteFilter', () => {
     historyPushStub = jest.fn()
   })
 
-  const createSubject = (selectedRouteId, urlRouteId) => {
-    return shallow(
-      <UrlRouteFilter
-        selectedRouteId={selectedRouteId}
-        defaultRouteId={defaultRouteId}
-        applyStreamFilter={applyStreamFilterStub}
-        fetchAvailableRoutes={fetchAvailableRoutesStub}
-        availableRoutes={fakeAvailableRoutes}
-        history={{ push: historyPushStub }}
-        match={{ params: { routeId: urlRouteId } }}
-      />
-    )
-  }
-
   describe('when user types in valid route id in url and it is different than states selected route', () => {
     beforeEach(() => {
-      subject = createSubject('101', '101')
+      subject = createSubject({ selectedRouteId: '101', urlRouteId: '101' })
       subject.setProps({ match: { params: { routeId: '2' } } })
     })
 
@@ -56,7 +42,7 @@ describe('UrlRouteFilter', () => {
 
   describe('when user types in valid route id in url and it is the same as states selected route', () => {
     beforeEach(() => {
-      subject = createSubject('101', '101')
+      subject = createSubject({ selectedRouteId: '101', urlRouteId: '101' })
       subject.setProps({ match: { params: { routeId: '101' } } })
     })
 
@@ -67,7 +53,7 @@ describe('UrlRouteFilter', () => {
 
   describe('when user types in invalid route id in url', () => {
     beforeEach(() => {
-      subject = createSubject('2', '2')
+      subject = createSubject({ selectedRouteId: '2', urlRouteId: '2' })
       subject.setProps({ match: { params: { routeId: 'CEAVY' } } })
     })
 
@@ -90,7 +76,7 @@ describe('UrlRouteFilter', () => {
 
   describe('url is somehow on an invalid route and user types in a valid one', () => {
     beforeEach(() => {
-      subject = createSubject(undefined, undefined)
+      subject = createSubject({ selectedRouteId: undefined, urlRouteId: undefined })
       subject.setProps({ match: { params: { routeId: '2' } } })
     })
 
@@ -105,7 +91,7 @@ describe('UrlRouteFilter', () => {
 
   describe('url and state are somehow out of sync already and url is updated', () => {
     beforeEach(() => {
-      subject = createSubject(undefined, '101')
+      subject = createSubject({ selectedRouteId: undefined, urlRouteId: '101' })
       subject.setProps({ match: { params: { routeId: '2' } } })
     })
 
@@ -120,7 +106,7 @@ describe('UrlRouteFilter', () => {
 
   describe('url has valid route and selectedRouteId is updated', () => {
     beforeEach(() => {
-      subject = createSubject('2', '2')
+      subject = createSubject({ selectedRouteId: '2', urlRouteId: '2' })
       subject.setProps({ selectedRouteId: '101' })
     })
 
@@ -135,7 +121,7 @@ describe('UrlRouteFilter', () => {
 
   describe('url has valid route and selectedRouteId is set (but not updated)', () => {
     beforeEach(() => {
-      subject = createSubject('2', '2')
+      subject = createSubject({ selectedRouteId: '2', urlRouteId: '2' })
       subject.setProps({ selectedRouteId: '2' })
     })
 
@@ -146,7 +132,7 @@ describe('UrlRouteFilter', () => {
 
   describe('url is somehow on an invalid route and selectedRouteId is updated', () => {
     beforeEach(() => {
-      subject = createSubject(undefined, undefined)
+      subject = createSubject({ selectedRouteId: undefined, urlRouteId: undefined })
       subject.setProps({ selectedRouteId: '2' })
     })
 
@@ -169,7 +155,7 @@ describe('UrlRouteFilter', () => {
 
   describe('url and state are somehow out of sync already and state is updated', () => {
     beforeEach(() => {
-      subject = createSubject(undefined, '101')
+      subject = createSubject({ selectedRouteId: undefined, urlRouteId: '101' })
       subject.setProps({ selectedRouteId: '2' })
     })
 
@@ -181,4 +167,18 @@ describe('UrlRouteFilter', () => {
       expect(historyPushStub).toHaveBeenCalledTimes(1)
     })
   })
+
+  const createSubject = ({ selectedRouteId, urlRouteId }) => {
+    return shallow(
+      <UrlRouteFilter
+        selectedRouteId={selectedRouteId}
+        defaultRouteId={defaultRouteId}
+        applyStreamFilter={applyStreamFilterStub}
+        fetchAvailableRoutes={fetchAvailableRoutesStub}
+        availableRoutes={fakeAvailableRoutes}
+        history={{ push: historyPushStub }}
+        match={{ params: { routeId: urlRouteId } }}
+      />
+    )
+  }
 })
