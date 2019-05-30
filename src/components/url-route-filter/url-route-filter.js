@@ -1,46 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import _ from 'lodash'
 
 const CMAX_LINE_NUMBER = '101'
 
-export default class extends React.Component {
-  componentDidMount = () => {
-    this.props.fetchAvailableRoutes()
+export default (props) => {
+  const { selectedRouteId, availableRoutes, history, match: { params: { routeId: urlRouteId } } } = props
+
+  const routeIsNotValid = (id) => {
+    return _.find(availableRoutes, { value: id }) === undefined
   }
 
-  updateUrl = (id) => {
-    return this.props.history.push(id)
+  const handleInitialize = () => {
+    props.fetchAvailableRoutes()
   }
 
-  updateState = (id) => {
-    return this.props.applyStreamFilter([id])
-  }
-
-  routeIsNotValid = (id) => {
-    return _.find(this.props.availableRoutes, { value: id }) === undefined
-  }
-
-  componentDidUpdate = (previousProps) => {
-    const { selectedRouteId, match: { params: { routeId: urlRouteId } } } = this.props
-
-    const stateAndUrlOutOfSync = selectedRouteId !== urlRouteId
-    const stateWasUpdated = selectedRouteId !== previousProps.selectedRouteId
-
-    if (this.routeIsNotValid(urlRouteId)) {
-      this.updateState(CMAX_LINE_NUMBER)
-      return this.updateUrl(CMAX_LINE_NUMBER)
-    }
-
-    if (stateAndUrlOutOfSync) {
-      if (stateWasUpdated) {
-        return this.updateUrl(selectedRouteId)
-      } else {
-        return this.updateState(urlRouteId)
-      }
+  const handleUrlUpdate = () => {
+    if (routeIsNotValid(urlRouteId)) {
+      props.applyStreamFilter([CMAX_LINE_NUMBER])
+      history.push(CMAX_LINE_NUMBER)
+    } else {
+      props.applyStreamFilter([urlRouteId])
     }
   }
 
-  render = () => {
-    return <url-route-filter />
+  const handleFilterUpdate = () => {
+    history.push(selectedRouteId)
   }
+
+  useEffect(handleInitialize, [])
+  useEffect(handleUrlUpdate, [urlRouteId, availableRoutes])
+  useEffect(handleFilterUpdate, [selectedRouteId])
+
+  return null
 }
