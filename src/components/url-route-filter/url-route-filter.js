@@ -1,6 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 
+const CMAX_LINE_NUMBER = '101'
+
 export default class extends React.Component {
   componentDidMount = () => {
     this.props.fetchAvailableRoutes()
@@ -19,14 +21,14 @@ export default class extends React.Component {
   }
 
   componentDidUpdate = (previousProps) => {
-    const { selectedRouteId, defaultRouteId, match: { params: { routeId: urlRouteId } } } = this.props
+    const { selectedRouteId, match: { params: { routeId: urlRouteId } } } = this.props
 
     const stateAndUrlOutOfSync = selectedRouteId !== urlRouteId
     const stateWasUpdated = selectedRouteId !== previousProps.selectedRouteId
 
     if (this.routeIsNotValid(urlRouteId)) {
-      this.updateState(defaultRouteId)
-      return this.updateUrl(defaultRouteId)
+      this.updateState(CMAX_LINE_NUMBER)
+      return this.updateUrl(CMAX_LINE_NUMBER)
     }
 
     if (stateAndUrlOutOfSync) {

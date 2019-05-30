@@ -23,6 +23,21 @@ describe('websocketSaga', () => {
     on = jest.fn()
     push = jest.fn()
     onOpen = jest.fn()
+    Socket.mockImplementation(() => ({
+      connect: jest.fn(),
+      onOpen: onOpen,
+      channel: channel.mockReturnValue({
+        on: on,
+        push: push,
+        join: jest.fn().mockReturnValue({
+          receive: jest.fn().mockReturnValue({
+            receive: jest.fn().mockReturnValue({
+              receive: jest.fn()
+            })
+          })
+        })
+      })
+    }))
 
     let sagaMiddleware = createSagaMiddleware()
     store = createStore(reducer, applyMiddleware(sagaMiddleware))
@@ -30,27 +45,6 @@ describe('websocketSaga', () => {
   })
 
   describe('with no route filter action ever sent', () => {
-    beforeEach(() => {
-      Socket.mockImplementation(() => ({
-        connect: jest.fn(),
-        onOpen: onOpen,
-        channel: channel.mockReturnValue({
-          on: on,
-          push: push,
-          join: jest.fn().mockReturnValue({
-            receive: jest.fn().mockReturnValue({
-              receive: jest.fn().mockReturnValue({
-                receive: jest.fn()
-              })
-            })
-          })
-        })
-      }))
-    })
-
-    afterEach(() => {
-      jest.restoreAllMocks()
-    })
     it('does not establish a connection to socket and channel with an empty filter', () => {
       // global window object doesn't exist when running in node
       expect(Socket).not.toHaveBeenCalledWith('undefined/socket')
@@ -60,21 +54,6 @@ describe('websocketSaga', () => {
 
   describe('with a route filter action having been sent', () => {
     beforeEach(() => {
-      Socket.mockImplementation(() => ({
-        connect: jest.fn(),
-        onOpen: onOpen,
-        channel: channel.mockReturnValue({
-          on: on,
-          push: push,
-          join: jest.fn().mockReturnValue({
-            receive: jest.fn().mockReturnValue({
-              receive: jest.fn().mockReturnValue({
-                receive: jest.fn()
-              })
-            })
-          })
-        })
-      }))
       store.dispatch({ type: ROUTE_FILTER, 'filter': ['yahtzee'] })
     })
 
@@ -104,9 +83,6 @@ describe('websocketSaga', () => {
 
     it('does not re-establish the websocket based on a ROUTE_FILTER event', () => {
       store.dispatch({ type: ROUTE_FILTER, 'filter': ['yeet'] })
-      // expect(Socket).toHaveBeenCalledWith('undefined/socket')
-      // expect(Socket).toHaveBeenCalledTimes(1)
-      // expect(onOpen).toHaveBeenCalledWith('streaming:central_ohio_transit_authority__cota_stream', { 'vehicle.trip.route_id': [] })
       expect(onOpen).toHaveBeenCalledTimes(1)
     })
 

@@ -9,11 +9,10 @@ jest.mock('react-ga', () => ({
 
 describe('UrlRouteFilter', () => {
   let subject, applyStreamFilterStub, fetchAvailableRoutesStub, fakeAvailableRoutes, historyPushStub
-  const defaultRouteId = 'DEFAULT'
 
   beforeEach(() => {
     fakeAvailableRoutes = [
-      { value: defaultRouteId, label: 'a label' },
+      { value: 'whatever', label: 'a label' },
       { value: '101', label: 'CMAX' },
       { value: '2', label: 'second route' }
     ]
@@ -58,7 +57,7 @@ describe('UrlRouteFilter', () => {
     })
 
     it('updates state to url param', () => {
-      expect(applyStreamFilterStub).toBeCalledWith([defaultRouteId])
+      expect(applyStreamFilterStub).toBeCalledWith(['101'])
     })
 
     it('updates state exactly once', () => {
@@ -66,7 +65,7 @@ describe('UrlRouteFilter', () => {
     })
 
     it('updates url to reflect default', () => {
-      expect(historyPushStub).toBeCalledWith(defaultRouteId)
+      expect(historyPushStub).toBeCalledWith('101')
     })
 
     it('updates url exactly once', () => {
@@ -137,7 +136,7 @@ describe('UrlRouteFilter', () => {
     })
 
     it('updates state to default url param', () => {
-      expect(applyStreamFilterStub).toBeCalledWith([defaultRouteId])
+      expect(applyStreamFilterStub).toBeCalledWith(['101'])
     })
 
     it('updates state exactly once', () => {
@@ -145,7 +144,7 @@ describe('UrlRouteFilter', () => {
     })
 
     it('updates url to reflect default', () => {
-      expect(historyPushStub).toBeCalledWith(defaultRouteId)
+      expect(historyPushStub).toBeCalledWith('101')
     })
 
     it('updates url exactly once', () => {
@@ -172,12 +171,12 @@ describe('UrlRouteFilter', () => {
     return shallow(
       <UrlRouteFilter
         selectedRouteId={selectedRouteId}
-        defaultRouteId={defaultRouteId}
         applyStreamFilter={applyStreamFilterStub}
         fetchAvailableRoutes={fetchAvailableRoutesStub}
         availableRoutes={fakeAvailableRoutes}
         history={{ push: historyPushStub }}
-        match={{ params: { routeId: urlRouteId } }}
+        match={{ params: { routeId: urlRouteId } }
+        }
       />
     )
   }
