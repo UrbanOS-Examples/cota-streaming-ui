@@ -40,33 +40,40 @@ const createEventChannel = channel => {
   })
 }
 
-const fromServer = function * (eventChannel) {
+const fromServer = function* (eventChannel) {
   while (true) {
     const message = yield take(eventChannel)
-    if(message !== undefined) {
+    if (message !== undefined) {
       message.provider = CEAV
     }
 
     let provider = yield select(state => state.provider.name)
-    if(provider === CEAV) {
+    if (provider === CEAV) {
       yield put(ceavUpdate(message))
     }
   }
 }
 
-const fromEventBus = function * (channel) {
+const fromEventBus = function* (channel) {
   while (true) {
     const action = yield take(ROUTE_FILTER)
-    if(CEAV === action.filter[0]) {
+    if (CEAV === action.filter[0]) {
       yield call(sendFilter, channel)
     }
   }
 }
 
-export default function * shuttleWebSocketSaga () {
+const doSaga = function* () {
   const socket = yield call(createSocket, `${window.WEBSOCKET_HOST}/socket`)
   const channel = yield call(createChannel, socket)
   const eventChannel = yield call(createEventChannel, channel)
 
   yield race([call(fromEventBus, channel), call(fromServer, eventChannel)])
+}
+
+export default function* shuttleWebSocketSaga() {
+  while (true) {
+    const action = yield take(ROUTE_FILTER)
+    yield call(doSaga, action)
+  }
 }

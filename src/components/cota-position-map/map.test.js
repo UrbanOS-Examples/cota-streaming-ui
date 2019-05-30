@@ -36,7 +36,7 @@ describe('map', () => {
 
   it('gives each marker a bus icon that is constructed with the default zoom level of 12', () => {
     expect(subject.find(RotatedMarker).map(it => it.props().icon)).toEqual(vehicles.map(it => fakeIcon))
-    expect(iconFactory.createBusIcon.mock.calls).toEqual(vehicles.map(it => [12, "LeroyJenkins"]))
+    expect(iconFactory.createBusIcon.mock.calls).toEqual(vehicles.map(it => [12, 'LeroyJenkins']))
   })
 
   describe('viewport is updated', () => {
@@ -47,7 +47,7 @@ describe('map', () => {
     })
 
     it('updates the icon scale when viewport is changed', () => {
-      expect(iconFactory.createBusIcon.mock.calls).toEqual(vehicles.map(it => ['some new zoom', "LeroyJenkins"]))
+      expect(iconFactory.createBusIcon.mock.calls).toEqual(vehicles.map(it => ['some new zoom', 'LeroyJenkins']))
     })
   })
 
@@ -72,7 +72,7 @@ describe('map', () => {
       longitude: lng,
       bearing: bearing,
       timestamp: 123000,
-      provider: "LeroyJenkins"
+      provider: 'LeroyJenkins'
     }
   }
 })

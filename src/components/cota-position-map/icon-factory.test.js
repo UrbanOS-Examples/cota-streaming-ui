@@ -28,7 +28,7 @@ describe('Icon Factory', () => {
   })
 
   it('creates green bus icons for CEAV shuttles', () => {
-    iconFactory.createBusIcon(10, "CEAV")
+    iconFactory.createBusIcon(10, 'CEAV')
 
     expect(leaflet.icon).toHaveBeenCalledWith({
       iconUrl: smartCircuitIcon,

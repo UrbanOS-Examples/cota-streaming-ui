@@ -1,5 +1,5 @@
 import React from 'react'
-import RouteFilter from './route-filter'
+import DropdownRouteFilter from './dropdown-route-filter'
 import { shallow } from 'enzyme'
 import ReactGA from 'react-ga'
 
@@ -7,20 +7,20 @@ jest.mock('react-ga', () => ({
   event: jest.fn()
 }))
 
-describe('RouteFilter', () => {
-  let subject, routeFilterStub, routeFetchStub, dropdown, fakeRoutes
+describe('DropdownRouteFilter', () => {
+  let subject, applyStreamFilterStub, fetchAvailableRoutesStub, dropdown, fakeRoutes
 
   beforeEach(() => {
-    fakeRoutes = [{value: 'some cool route', label: 'a label'}, {value: '2', label: 'second route'}]
+    fakeRoutes = [{ value: 'some cool route', label: 'a label' }, { value: '2', label: 'second route' }]
 
     ReactGA.event.mockClear()
 
-    routeFilterStub = jest.fn()
-    routeFetchStub = jest.fn()
-    subject = shallow(<RouteFilter selectedRouteId={fakeRoutes[0].value}
-      routeFilter={routeFilterStub}
-      routeFetch={routeFetchStub}
-      routes={fakeRoutes} />)
+    applyStreamFilterStub = jest.fn()
+    fetchAvailableRoutesStub = jest.fn()
+    subject = shallow(<DropdownRouteFilter selectedRouteId={fakeRoutes[0].value}
+      applyStreamFilter={applyStreamFilterStub}
+      fetchAvailableRoutes={fetchAvailableRoutesStub}
+      availableRoutes={fakeRoutes} />)
     dropdown = subject.find('[id="routeSelect"]')
   })
 
@@ -29,15 +29,15 @@ describe('RouteFilter', () => {
   })
 
   it('passes the selected value to its route filter function', () => {
-    dropdown.simulate('change', {value: '001', label: 'whonko'})
+    dropdown.simulate('change', { value: '001', label: 'whonko' })
 
-    expect(routeFilterStub).toBeCalledWith(['001'])
+    expect(applyStreamFilterStub).toBeCalledWith(['001'])
   })
 
   it('passes an empty list to its route filter when given a change with no value (signal to clear selection)', () => {
     dropdown.simulate('change', { label: 'Timmay!' })
 
-    expect(routeFilterStub).toBeCalledWith([])
+    expect(applyStreamFilterStub).toBeCalledWith([])
   })
 
   describe('Google Analytics', () => {
