@@ -1,13 +1,8 @@
 import { combineReducers } from 'redux'
 import { POSITION_UPDATE, ROUTE_FILTER, CEAV_UPDATE, ROUTE_UPDATE } from '../actions'
 import { CEAV, COTA } from '../variables'
-const CMAX_LINE_NUMBER = '101'
 
-const defaultRouteId = (defaultRouteId = CMAX_LINE_NUMBER, _action) => {
-  return defaultRouteId
-}
-
-const filter = (filter = [CMAX_LINE_NUMBER], action) => {
+const filter = (filter = [], action) => {
   switch (action.type) {
     case ROUTE_FILTER:
       return action.filter
@@ -78,7 +73,6 @@ const availableRoutes = (availableRoutes = [], action) => {
 }
 
 export default combineReducers({
-  defaultRouteId,
   filter,
   data,
   availableRoutes,

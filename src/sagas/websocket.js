@@ -18,7 +18,7 @@ export let createSocket = (socketUrl) => {
   return socket
 }
 
-const createChannel = function * (socket) {
+const createChannel = function* (socket) {
   const channel = socket.channel('streaming:central_ohio_transit_authority__cota_stream', { 'vehicle.trip.route_id': [] })
   localStateFilters = yield select(state => state.filter)
   socket.onOpen(() => sendFilter(channel))
@@ -50,7 +50,7 @@ const createEventChannel = channel => {
   })
 }
 
-const fromServer = function * (eventChannel) {
+const fromServer = function* (eventChannel) {
   while (true) {
     const message = yield take(eventChannel)
     if (message.vehicle !== undefined) {
@@ -61,7 +61,7 @@ const fromServer = function * (eventChannel) {
   }
 }
 
-const fromEventBus = function * (channel) {
+const fromEventBus = function* (channel) {
   while (true) {
     const action = yield take(ROUTE_FILTER)
     localStateFilters = action.filter
@@ -70,10 +70,17 @@ const fromEventBus = function * (channel) {
   }
 }
 
-export default function * websocketSaga () {
+const doSaga = function* () {
   const socket = yield call(createSocket, `${window.WEBSOCKET_HOST}/socket`)
   const channel = yield call(createChannel, socket)
   const eventChannel = yield call(createEventChannel, channel)
 
   yield race([call(fromEventBus, channel), call(fromServer, eventChannel)])
+}
+
+export default function* websocketSaga() {
+  while (true) {
+    const action = yield take(ROUTE_FILTER)
+    yield call(doSaga, action)
+  }
 }
