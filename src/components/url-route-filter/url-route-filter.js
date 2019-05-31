@@ -7,10 +7,20 @@ export default (props) => {
   const { selectedRouteId, availableRoutes, history, match: { params: { routeId: urlRouteId } } } = props
 
   const routeIdsAreInSync = selectedRouteId === urlRouteId
-  const noAvailableRoutes = _.isEmpty(availableRoutes)
+  const routesAreAvailable = !_.isEmpty(availableRoutes)
 
-  const routeIsNotValid = (id) => {
-    return _.find(availableRoutes, { value: id }) === undefined
+  const routeIsValid = (id) => {
+    return _.find(availableRoutes, { value: id }) !== undefined
+  }
+
+  const shouldApplyDefaults = (id) => {
+    return routesAreAvailable && !routeIsValid(id)
+  }
+  const shouldApplyUrlChanges = (id) => {
+    return routeIsValid(id) && routesAreAvailable && !routeIdsAreInSync
+  }
+  const shouldApplyStateChanges = (_id) => {
+    return !routeIdsAreInSync
   }
 
   const handleInitialize = () => {
@@ -18,20 +28,17 @@ export default (props) => {
   }
 
   const handleUrlUpdate = () => {
-    if (noAvailableRoutes) return
-
-    if (routeIsNotValid(urlRouteId)) {
+    if (shouldApplyDefaults(urlRouteId)) {
       props.applyStreamFilter([CMAX_LINE_NUMBER])
       history.push(CMAX_LINE_NUMBER)
-    } else {
-      if (routeIdsAreInSync) return
+    }
+    if (shouldApplyUrlChanges(urlRouteId)) {
       props.applyStreamFilter([urlRouteId])
     }
   }
 
   const handleFilterUpdate = () => {
-    if (routeIdsAreInSync) return
-    history.push(selectedRouteId)
+    if (shouldApplyStateChanges(selectedRouteId)) history.push(selectedRouteId)
   }
 
   useEffect(handleInitialize, [])
