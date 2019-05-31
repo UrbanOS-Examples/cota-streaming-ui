@@ -65,9 +65,10 @@
   },
   "devDependencies": {
     "babel-polyfill": "^6.26.0",
-    "enzyme": "^3.3.0",
+    "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",
     "identity-obj-proxy": "^3.0.0",
+    "jest-extended": "^0.11.1",
     "node-sass": "^4.9.0",
     "react-a11y": "^1.0.1",
     "sass-loader": "^7.0.2",
@@ -92,7 +93,8 @@
       "blue-bus\\.svg": "<rootDir>/test-helpers/blue-svg.js",
       "smart_circuit\\.svg": "<rootDir>/test-helpers/smart-circuit-svg.js",
       "\\.(svg)$": "<rootDir>/test-helpers/mock-svg-string.js"
-    }
+    },
+    "setupTestFrameworkScriptFile": "jest-extended"
   },
   "babel": {
     "presets": [
