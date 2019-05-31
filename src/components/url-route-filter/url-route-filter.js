@@ -17,7 +17,7 @@ export default (props) => {
     return routesAreAvailable && !routeIsValid(id)
   }
   const shouldApplyUrlChanges = (id) => {
-    return routeIsValid(id) && routesAreAvailable && !routeIdsAreInSync
+    return routesAreAvailable && !routeIdsAreInSync
   }
   const shouldApplyStateChanges = (_id) => {
     return !routeIdsAreInSync
@@ -31,8 +31,7 @@ export default (props) => {
     if (shouldApplyDefaults(urlRouteId)) {
       props.applyStreamFilter([CMAX_LINE_NUMBER])
       history.push(CMAX_LINE_NUMBER)
-    }
-    if (shouldApplyUrlChanges(urlRouteId)) {
+    } else if (shouldApplyUrlChanges(urlRouteId)) {
       props.applyStreamFilter([urlRouteId])
     }
   }
