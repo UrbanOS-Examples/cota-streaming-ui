@@ -7,20 +7,9 @@ export default (props) => {
   const { selectedRouteId, availableRoutes, history, match: { params: { routeId: urlRouteId } } } = props
 
   const routeIdsAreInSync = selectedRouteId === urlRouteId
-  const routesAreAvailable = !_.isEmpty(availableRoutes)
 
   const routeIsValid = (id) => {
     return _.find(availableRoutes, { value: id }) !== undefined
-  }
-
-  const shouldApplyDefaults = (id) => {
-    return routesAreAvailable && !routeIsValid(id)
-  }
-  const shouldApplyUrlChanges = (id) => {
-    return routesAreAvailable && !routeIdsAreInSync
-  }
-  const shouldApplyStateChanges = (_id) => {
-    return !routeIdsAreInSync
   }
 
   const handleInitialize = () => {
@@ -28,16 +17,20 @@ export default (props) => {
   }
 
   const handleUrlUpdate = () => {
-    if (shouldApplyDefaults(urlRouteId)) {
+    if (_.isEmpty(availableRoutes)) return
+
+    if (!routeIsValid(urlRouteId)) {
       props.applyStreamFilter([CMAX_LINE_NUMBER])
       history.push(CMAX_LINE_NUMBER)
-    } else if (shouldApplyUrlChanges(urlRouteId)) {
+    } else if (!routeIdsAreInSync) {
       props.applyStreamFilter([urlRouteId])
     }
   }
 
   const handleFilterUpdate = () => {
-    if (shouldApplyStateChanges(selectedRouteId)) history.push(selectedRouteId)
+    if (!routeIdsAreInSync) {
+      history.push(selectedRouteId)
+    }
   }
 
   useEffect(handleInitialize, [])
