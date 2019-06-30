@@ -1,5 +1,5 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   module: {
@@ -22,41 +22,46 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: 'css-loader'
+        use:  [  'style-loader', MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
       {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|jpg|gif|svg)$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: 'file-loader',
             options: {
-              limit: 5000
+              name: "[path][name].[hash].[ext]"
             }
           }
         ]
-      },
-      {
-        test: /\.(svg)$/,
-        exclude: /fonts/, /* dont want svg fonts from fonts folder to be included */
-        use: [
-          {
-            loader: 'svg-url-loader',
-            options: {
-              noquotes: true,
-            },
-          },
-        ],
       }
+      // {
+      //   test: /\.(svg)$/,
+      //   exclude: /fonts/, /* dont want svg fonts from fonts folder to be included */
+      //   use: [
+      //     {
+      //       loader: 'svg-url-loader',
+      //       options: {
+      //         noquotes: true,
+      //       },
+      //     },
+      //   ],
+      // }
     ]
   },
   plugins: [
     new HtmlWebPackPlugin({
+      inject: false,
+      hash: true,
       template: "./src/index.html",
-      filename: "./index.html"
+      filename: "index.html"
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'style.css'
     })
   ]
 };
