@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "webpack --mode development",
     "build": "webpack --mode production"
   },
@@ -27,9 +27,12 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.0.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
     "file-loader": "^4.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^24.8.0",
     "mini-css-extract-plugin": "^0.7.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
@@ -39,6 +42,7 @@
   },
   "dependencies": {
     "apisauce": "^1.0.3",
+    "identity-obj-proxy": "^3.0.0",
     "leaflet": "^1.5.1",
     "node-sass": "^4.12.0",
     "normalize.css": "^8.0.1",
@@ -53,5 +57,17 @@
     "react-select": "^3.0.4",
     "redux": "^4.0.1",
     "redux-saga": "1.0.4"
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/test-helpers/shim.js",
+      "<rootDir>/test-helpers/test-start-point.js"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|scss|png)$": "identity-obj-proxy",
+      "blue-bus\\.svg": "<rootDir>/test-helpers/blue-svg.js",
+      "smart_circuit\\.svg": "<rootDir>/test-helpers/smart-circuit-svg.js",
+      "\\.(svg)$": "<rootDir>/test-helpers/mock-svg-string.js"
+    }
   }
 }
