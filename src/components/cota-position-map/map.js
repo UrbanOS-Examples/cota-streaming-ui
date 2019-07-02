@@ -1,5 +1,5 @@
 import React, { createRef } from 'react'
-import { Map, TileLayer, ZoomControl, Marker } from 'react-leaflet'
+import { Map as LeafletMap, TileLayer, ZoomControl, Marker } from 'react-leaflet'
 import RotatedMarker from 'react-leaflet-rotatedmarker'
 import iconFactory from './icon-factory'
 import './map.scss'
@@ -11,10 +11,7 @@ export default class extends React.Component {
     this.state = {
       zoom: this.defaultZoom,
       hasLocation: false,
-      latlng: {
-        lat: 39.9612,
-        lng: -82.9988
-      }
+      center: [39.9612, -82.9988]
     }
     this.mapRef = createRef()
   }
@@ -25,16 +22,16 @@ export default class extends React.Component {
 
   render () {
     const marker = this.state.hasLocation ? (
-      <Marker position={this.state.latlng} icon={iconFactory.createLocationIcon(this.state.zoom)} zIndexOffset={1000} />
+      <Marker position={this.state.center} icon={iconFactory.createLocationIcon(this.state.zoom)} zIndexOffset={1000} />
     ) : null
     const accessToken = 'pk.eyJ1Ijoic21ydGNidXMiLCJhIjoiY2ptMTB6YjIzMGVuazNwcWcyczk3a2ZmNSJ9.SjVhquTC7K5RzbGqoGZUYg'
 
     return (
       <map-element>
-        <Map
+        <LeafletMap
           fadeAnimation={false}
           ref={this.mapRef}
-          center={this.state.latlng}
+          center={this.state.center}
           zoom={this.defaultZoom}
           zoomControl={false}
           onViewportChanged={viewport => this.onViewportChanged(viewport)}
@@ -44,8 +41,8 @@ export default class extends React.Component {
           {this.props.data.map(it => <RotatedMarker key={it.vehicleId} position={[it.latitude, it.longitude]} rotationAngle={it.bearing} icon={iconFactory.createBusIcon(this.state.zoom, it.provider)} />)}
           <ZoomControl position='topright' />
           {marker}
-        </Map>
-      </map-element>
+        </LeafletMap>
+    </map-element>
     )
   }
 

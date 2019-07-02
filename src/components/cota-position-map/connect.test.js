@@ -32,6 +32,6 @@ describe('BusMap', () => {
       dispatch: jest.fn()
     }
     let wrapper = shallow(<BusMap store={fakeStore} />)
-    expect(wrapper.find('Component').props().data).toEqual(data)
+    expect(wrapper.find('_default').props().data).toEqual(data)
   })
 })

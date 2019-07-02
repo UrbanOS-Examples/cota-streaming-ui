@@ -74,8 +74,11 @@ def deployUiTo(params = [:]) {
         def terraformOutputs = scos.terraformOutput(environment)
         def subnets = terraformOutputs.public_subnets.value.join(/\\,/)
         def allowInboundTrafficSG = terraformOutputs.allow_all_security_group.value
-        def certificateARN = terraformOutputs.root_tls_certificate_arn.value
+        def certificateARNs = [terraformOutputs.root_tls_certificate_arn.value,terraformOutputs.tls_certificate_arn.value].join(/\\,/)
         def ingressScheme = internal ? 'internal' : 'internet-facing'
+        def dnsZone = terraformOutputs.internal_dns_zone_name.value
+        def rootDnsZone = terraformOutputs.root_dns_zone_name.value
+
         sh("""#!/bin/bash
             set -e
             helm init --client-only
@@ -87,8 +90,9 @@ def deployUiTo(params = [:]) {
                 --set ingress.scheme="${ingressScheme}" \
                 --set ingress.subnets="${subnets}" \
                 --set ingress.securityGroups="${allowInboundTrafficSG}" \
-                --set ingress.dnsZone="${environment}.internal.smartcolumbusos.com" \
-                --set ingress.certificateARN="${certificateARN}" \
+                --set ingress.dnsZone="${dnsZone}" \
+                --set ingress.rootDnsZone="${rootDnsZone}" \
+                --set ingress.certificateARN="${certificateARNs}" \
                 --set image.tag="${env.GIT_COMMIT_HASH}"
         """.trim())
     }

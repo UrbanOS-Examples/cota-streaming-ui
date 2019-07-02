@@ -17,7 +17,7 @@ spec:
     serviceName: {{ .Chart.Name }}
     servicePort: {{ .Values.service.port  }}
   rules:
-  - host: cota.smartcolumbusos.com
+  - host: cota.{{ .Values.ingress.rootDnsZone }}
     http:
       paths:
       - path: /*

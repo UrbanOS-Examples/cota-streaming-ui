@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime";
 import { call, take, put, race, select } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { Socket } from 'phoenix'
