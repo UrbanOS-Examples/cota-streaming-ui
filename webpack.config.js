@@ -1,8 +1,17 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const zopfli = require('@gfx/zopfli');
 
 module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, 'dist')
+  },
   module: {
     rules: [
       {
@@ -43,15 +52,36 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({
-      inject: false,
-      hash: true,
+      inject: true,
       template: "./src/index.html",
       filename: "index.html"
     }),
     new MiniCssExtractPlugin({
       filename: 'style.css'
     }),
-    new CopyPlugin(['public'])
-  ]
+    new CopyPlugin(['public']),
+    new CompressionPlugin({
+      compressionOptions: {
+        numiterations: 15,
+      },
+      algorithm(input, compressionOptions, callback) {
+        return zopfli.gzip(input, compressionOptions, callback);
+      },
+    }),
+  ],
+  optimization: {
+      moduleIds: 'hashed',
+      runtimeChunk: 'single',
+      splitChunks: {
+          cacheGroups: {
+              vendor: {
+                  test: /[\\/]node_modules[\\/]/,
+                  name: 'vendors',
+                  chunks: 'all',
+              }
+          }
+      }
+  }
 };
