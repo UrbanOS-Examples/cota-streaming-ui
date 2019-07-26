@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import { POSITION_UPDATE, ROUTE_FILTER, CEAV_UPDATE, ROUTE_UPDATE } from '../actions'
 import { CEAV, COTA } from '../variables'
+import _ from 'lodash'
 
 const filter = (filter = [], action) => {
   switch (action.type) {
@@ -60,7 +61,9 @@ const data = (data = {}, action) => {
 const availableRoutes = (availableRoutes = [], action) => {
   switch (action.type) {
     case ROUTE_UPDATE:
-      let routesToUse = action.update.map((route) => {
+      const sorted = _.sortBy(action.update, ({ linenum }) => linenum);
+      const uniqueRoutes = _.sortedUniqBy(sorted, ({ linenum }) => linenum)
+      let routesToUse = uniqueRoutes.map((route) => {
         const lineNumber = new String(route.linenum).padStart(3, '0')
         const lineName = `${route.linenum} - ${route.linename}`
         return { value: lineNumber, label: lineName, provider: 'COTA' }
