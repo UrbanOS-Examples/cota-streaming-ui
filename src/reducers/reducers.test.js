@@ -101,22 +101,16 @@ describe('cotaApp reducers', () => {
   })
 
   it('will transform the data on a ROUTE_UPDATE action', () => {
-    let message = {
-      'help': 'not necessary',
-      'success': true,
-      'result': {
-        'records': [
-          {
-            'LINENUM': '1',
-            'LINENAME': 'Crazy Town'
-          },
-          {
-            'LINENUM': '101',
-            'LINENAME': 'Smallville'
-          }
-        ]
+    let message = [
+      {
+        'linenum': 1,
+        'linename': 'Crazy Town'
+      },
+      {
+        'linenum': 101,
+        'linename': 'Smallville'
       }
-    }
+    ]
 
     let state = [
       { value: '001', label: '1 - Crazy Town', provider: 'COTA' },
@@ -129,22 +123,16 @@ describe('cotaApp reducers', () => {
   })
 
   it('will append CEAV Smart Circuit on a ROUTE_UPDATE action', () => {
-    let message = {
-      'help': 'not necessary',
-      'success': true,
-      'result': {
-        'records': [
-          {
-            'LINENUM': '1',
-            'LINENAME': 'Crazy Town'
-          },
-          {
-            'LINENUM': '101',
-            'LINENAME': 'Smallville'
-          }
-        ]
+    let message = [
+      {
+        'linenum': 1,
+        'linename': 'Crazy Town'
+      },
+      {
+        'linenum': 101,
+        'linename': 'Smallville'
       }
-    }
+    ]
 
     let newState = reducer(undefined, { type: ROUTE_UPDATE, update: message })
     expect(newState.availableRoutes[2]).toEqual({ value: 'CEAV', label: 'SMRT - Smart Circuit', provider: 'CEAV' })

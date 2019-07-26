@@ -6,15 +6,13 @@ const COTA_LINE_DATA_SET_ID = `"2a329570-33d7-4cde-818d-6ef323e68875"`
 
 const fetchRoutes = function* (action) {
   const api = create({
-    baseURL: 'https://ckan.smartcolumbusos.com'
+    baseURL: 'https://data.smartcolumbusos.com/api/v1',
+    headers: { 'Accept': 'application/json' }
   })
 
   const { data } = yield call(
     api.get,
-    '/api/action/datastore_search_sql',
-    {
-      sql: `select distinct "LINENAME", "LINENUM" from ${COTA_LINE_DATA_SET_ID} order by "LINENUM"`
-    }
+    'organization/central_ohio_transit_authority/dataset/2a329570_33d7_4cde_818d_6ef323e68875/query'
   )
 
   yield put(routeUpdate(data))

@@ -60,9 +60,9 @@ const data = (data = {}, action) => {
 const availableRoutes = (availableRoutes = [], action) => {
   switch (action.type) {
     case ROUTE_UPDATE:
-      let routesToUse = action.update.result.records.map((route) => {
-        const lineNumber = route.LINENUM.padStart(3, '0')
-        const lineName = `${route.LINENUM} - ${route.LINENAME}`
+      let routesToUse = action.update.map((route) => {
+        const lineNumber = new String(route.linenum).padStart(3, '0')
+        const lineName = `${route.linenum} - ${route.linename}`
         return { value: lineNumber, label: lineName, provider: 'COTA' }
       })
       routesToUse.push({ value: CEAV, label: 'SMRT - Smart Circuit', provider: CEAV })
