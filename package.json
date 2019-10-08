@@ -71,7 +71,6 @@
     "moduleNameMapper": {
       "\\.(css|scss|png)$": "identity-obj-proxy",
       "blue-bus\\.svg": "<rootDir>/test-helpers/blue-svg.js",
-      "smart_circuit\\.svg": "<rootDir>/test-helpers/smart-circuit-svg.js",
       "\\.(svg)$": "<rootDir>/test-helpers/mock-svg-string.js"
     }
   }

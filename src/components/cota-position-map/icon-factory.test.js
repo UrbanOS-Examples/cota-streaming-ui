@@ -1,6 +1,5 @@
 import leaflet from 'leaflet'
 import busBlueSvg from '../../assets/blue-bus.svg'
-import smartCircuitIcon from '../../assets/smart_circuit.svg'
 import iconFactory from './icon-factory'
 import locationPin from '../../assets/ic_location-dot.svg'
 
@@ -24,15 +23,6 @@ describe('Icon Factory', () => {
     expect(leaflet.icon).toHaveBeenCalledWith({
       iconUrl: busBlueSvg,
       iconSize: [32, 27.5]
-    })
-  })
-
-  it('creates green bus icons for CEAV shuttles', () => {
-    iconFactory.createBusIcon(10, 'CEAV')
-
-    expect(leaflet.icon).toHaveBeenCalledWith({
-      iconUrl: smartCircuitIcon,
-      iconSize: [20, 20]
     })
   })
 })

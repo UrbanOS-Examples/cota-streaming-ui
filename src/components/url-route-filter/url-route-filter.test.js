@@ -53,7 +53,7 @@ describe('UrlRouteFilter', () => {
   describe('when user types in invalid route id in url', () => {
     beforeEach(() => {
       subject = createSubject({ selectedRouteId: '2', urlRouteId: '2' })
-      subject.setProps({ match: { params: { routeId: 'CEAVY' } } })
+      subject.setProps({ match: { params: { routeId: 'HEENDERSON' } } })
     })
 
     it('updates state to url param', () => {
