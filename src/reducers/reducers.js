@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { POSITION_UPDATE, ROUTE_FILTER, CEAV_UPDATE, ROUTE_UPDATE } from '../actions'
-import { CEAV, COTA } from '../variables'
+import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_UPDATE } from '../actions'
+import { COTA } from '../variables'
 import _ from 'lodash'
 
 const filter = (filter = [], action) => {
@@ -15,9 +15,6 @@ const filter = (filter = [], action) => {
 const provider = (provider = { name: COTA }, action) => {
   switch (action.type) {
     case ROUTE_FILTER:
-      if (CEAV === action.filter[0]) {
-        return Object.assign({}, provider, { name: CEAV })
-      }
       return Object.assign({}, provider, { name: COTA })
     default:
       return provider
@@ -39,18 +36,6 @@ const data = (data = {}, action) => {
       }
 
       return Object.assign({}, data, { [value.vehicleId]: value })
-    case CEAV_UPDATE:
-      let ceavVehicle = action.update
-      let busToPutOnMap = {
-        vehicleId: ceavVehicle.vehicle_id,
-        latitude: ceavVehicle.latitude,
-        longitude: ceavVehicle.longitude,
-        timestamp: ceavVehicle.update_time,
-        provider: ceavVehicle.provider,
-        bearing: 0
-      }
-
-      return Object.assign({}, data, { [busToPutOnMap.vehicleId]: busToPutOnMap })
     case ROUTE_FILTER:
       return {}
     default:
@@ -68,7 +53,6 @@ const availableRoutes = (availableRoutes = [], action) => {
         const lineName = `${route.linenum} - ${route.linename}`
         return { value: lineNumber, label: lineName, provider: 'COTA' }
       })
-      routesToUse.push({ value: CEAV, label: 'SMRT - Smart Circuit', provider: CEAV })
       return routesToUse
     default:
       return availableRoutes
