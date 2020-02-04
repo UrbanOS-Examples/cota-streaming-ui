@@ -122,12 +122,26 @@ describe('cotaApp reducers', () => {
     expect(newState.availableRoutes[1]).toEqual(state[1])
   })
 
+  it('has the LEAP route last after routes are updated', () => {
+    const message = [{ value: '001', label: '1 - Crazy Town', provider: 'COTA' }]
+    let newState = reducer(undefined, { type: ROUTE_UPDATE, update: [{ value: '001', label: '1 - Crazy Town', provider: 'COTA' }] })
+
+    expect(newState.availableRoutes[newState.availableRoutes.length - 1])
+      .toEqual({ value: 'LEAP', label: 'SMRT - Linden LEAP', provider: 'LEAP' })
+  })
+
+  it('has the LEAP route by default', () => {
+    let newState = reducer(undefined, { type: 'UNKNOWN_ACTION', stuff: [] })
+
+    expect(newState.availableRoutes).toEqual([{ value: 'LEAP', label: 'SMRT - Linden LEAP', provider: 'LEAP' }])
+  })
+
   it('will not transform the availableRoutes on an unknown event', () => {
     let newState = reducer({ availableRoutes: [{ value: '001', label: '1 - Crazy Town' }] }, { type: 'UNKNOWN_ACTION', stuff: [] })
     expect(newState.availableRoutes).toEqual([{ value: '001', label: '1 - Crazy Town' }])
   })
 
-  it('will should not remove all availableRoutes on route fetch action', () => {
+  it('will not remove all availableRoutes on route fetch action', () => {
     const availableRoutes = [
       { value: '001', label: '1 - Crazy Town' },
       { value: '101', label: '101 - Smallville' }

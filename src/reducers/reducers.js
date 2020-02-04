@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_UPDATE } from '../actions'
-import { COTA } from '../variables'
+import { COTA, LEAP } from '../variables'
 import _ from 'lodash'
 
 const filter = (filter = [], action) => {
@@ -43,7 +43,9 @@ const data = (data = {}, action) => {
   }
 }
 
-const availableRoutes = (availableRoutes = [], action) => {
+const defaultRoutes = [{ value: LEAP, label: 'SMRT - Linden LEAP', provider: LEAP }]
+
+const availableRoutes = (availableRoutes = defaultRoutes, action) => {
   switch (action.type) {
     case ROUTE_UPDATE:
       const sorted = _.sortBy(action.update, ({ linenum }) => linenum);
@@ -51,9 +53,9 @@ const availableRoutes = (availableRoutes = [], action) => {
       let routesToUse = uniqueRoutes.map((route) => {
         const lineNumber = new String(route.linenum).padStart(3, '0')
         const lineName = `${route.linenum} - ${route.linename}`
-        return { value: lineNumber, label: lineName, provider: 'COTA' }
+        return { value: lineNumber, label: lineName, provider: COTA }
       })
-      return routesToUse
+      return [...routesToUse, ...defaultRoutes]
     default:
       return availableRoutes
   }
