@@ -1,5 +1,5 @@
 import reducer from './index'
-import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_FETCH, ROUTE_UPDATE } from '../actions'
+import { POSITION_UPDATE, LEAP_POSITION_UPDATE, ROUTE_FILTER, ROUTE_FETCH, ROUTE_UPDATE } from '../actions'
 
 describe('cotaApp reducers', () => {
   it('will save the filter when processing a ROUTE_FILTER action', () => {
@@ -122,20 +122,6 @@ describe('cotaApp reducers', () => {
     expect(newState.availableRoutes[1]).toEqual(state[1])
   })
 
-  it('has the LEAP route last after routes are updated', () => {
-    const message = [{ value: '001', label: '1 - Crazy Town', provider: 'COTA' }]
-    let newState = reducer(undefined, { type: ROUTE_UPDATE, update: [{ value: '001', label: '1 - Crazy Town', provider: 'COTA' }] })
-
-    expect(newState.availableRoutes[newState.availableRoutes.length - 1])
-      .toEqual({ value: 'LEAP', label: 'SMRT - Linden LEAP', provider: 'LEAP' })
-  })
-
-  it('has the LEAP route by default', () => {
-    let newState = reducer(undefined, { type: 'UNKNOWN_ACTION', stuff: [] })
-
-    expect(newState.availableRoutes).toEqual([{ value: 'LEAP', label: 'SMRT - Linden LEAP', provider: 'LEAP' }])
-  })
-
   it('will not transform the availableRoutes on an unknown event', () => {
     let newState = reducer({ availableRoutes: [{ value: '001', label: '1 - Crazy Town' }] }, { type: 'UNKNOWN_ACTION', stuff: [] })
     expect(newState.availableRoutes).toEqual([{ value: '001', label: '1 - Crazy Town' }])
@@ -154,5 +140,55 @@ describe('cotaApp reducers', () => {
 
     let newState = reducer(currentState, { type: ROUTE_FETCH })
     expect(newState.availableRoutes).toEqual(availableRoutes)
+  })
+
+  describe('LEAP', () => {
+    it('has the LEAP route by default', () => {
+      let newState = reducer(undefined, { type: 'UNKNOWN_ACTION', stuff: [] })
+
+      expect(newState.availableRoutes).toEqual([{ value: 'LEAP', label: 'SMRT - Linden LEAP', provider: 'LEAP' }])
+    })
+
+    it('has the LEAP route last after routes are updated', () => {
+      const message = [{ value: '001', label: '1 - Crazy Town', provider: 'COTA' }]
+      let newState = reducer(undefined, { type: ROUTE_UPDATE, update: message })
+
+      expect(newState.availableRoutes[newState.availableRoutes.length - 1])
+        .toEqual({ value: 'LEAP', label: 'SMRT - Linden LEAP', provider: 'LEAP' })
+    })
+
+    it('transforms the data on a LEAP_POSITION_UPDATE action', () => {
+      const state = {
+        data: {
+          'SIMUPONYTAvehicle_api-test-public-v3-2': {
+            'stuff': 'that-should-not-be-changed'
+          }
+        }
+      }
+      const message = {
+        'attributes': {
+            'vehicle_id': 'SIMUPONYTAvehicle_api-test-public-v3-5',
+            'lat': 43.538284742935346,
+            'lon': 1.3600251758143491
+        }
+      }
+
+      const expected_data = {
+        ...state.data,
+        ...{
+          'SIMUPONYTAvehicle_api-test-public-v3-5': {
+            vehicleId: 'SIMUPONYTAvehicle_api-test-public-v3-5',
+            latitude: 43.538284742935346,
+            longitude: 1.3600251758143491,
+            bearing: 0,
+            provider: 'LEAP'
+          }
+        }
+      }
+
+      let newState = reducer(state, { type: LEAP_POSITION_UPDATE, update: message })
+
+      expect(newState.data).toEqual(expected_data)
+    })
   })
 })

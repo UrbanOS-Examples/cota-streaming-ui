@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_UPDATE } from '../actions'
+import { POSITION_UPDATE, LEAP_POSITION_UPDATE, ROUTE_FILTER, ROUTE_UPDATE } from '../actions'
 import { COTA, LEAP } from '../variables'
 import _ from 'lodash'
 
@@ -36,6 +36,17 @@ const data = (data = {}, action) => {
       }
 
       return Object.assign({}, data, { [value.vehicleId]: value })
+    case LEAP_POSITION_UPDATE:
+      let attributes = action.update.attributes
+      let leap_value = {
+        vehicleId: attributes.vehicle_id,
+        latitude: attributes.lat,
+        longitude: attributes.lon,
+        bearing: 0,
+        provider: LEAP
+      }
+
+      return Object.assign({}, data, { [leap_value.vehicleId]: leap_value })
     case ROUTE_FILTER:
       return {}
     default:
