@@ -1,5 +1,6 @@
 import leaflet from 'leaflet'
 import busBlueSvg from '../../assets/blue-bus.svg'
+import easymileSvg from '../../assets/map-marker-easymile.svg'
 import iconFactory from './icon-factory'
 import locationPin from '../../assets/ic_location-dot.svg'
 
@@ -23,6 +24,15 @@ describe('Icon Factory', () => {
     expect(leaflet.icon).toHaveBeenCalledWith({
       iconUrl: busBlueSvg,
       iconSize: [32, 27.5]
+    })
+  })
+
+  it('creates an easymile icon for easymile route', () => {
+    iconFactory.createBusIcon('10', 'LEAP')
+
+    expect(leaflet.icon).toHaveBeenCalledWith({
+      iconUrl: easymileSvg,
+      iconSize: [20, 20]
     })
   })
 })

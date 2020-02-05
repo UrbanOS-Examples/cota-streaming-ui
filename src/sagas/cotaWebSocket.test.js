@@ -1,5 +1,5 @@
 import { Socket } from 'phoenix'
-import sagas from './websocket'
+import sagas from './cotaWebSocket'
 import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { POSITION_UPDATE, ROUTE_FILTER } from '../actions'

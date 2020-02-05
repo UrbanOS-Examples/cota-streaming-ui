@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
     "test": "jest",
+    "test-watch": "jest --watch",
     "dev": "webpack --mode development",
     "build": "webpack --mode production"
   },
@@ -71,6 +72,7 @@
     "moduleNameMapper": {
       "\\.(css|scss|png)$": "identity-obj-proxy",
       "blue-bus\\.svg": "<rootDir>/test-helpers/blue-svg.js",
+      "map-marker-easymile\\.svg": "<rootDir>/test-helpers/map-marker-easymile-svg.js",
       "\\.(svg)$": "<rootDir>/test-helpers/mock-svg-string.js"
     }
   }

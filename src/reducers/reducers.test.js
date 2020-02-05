@@ -1,5 +1,6 @@
 import reducer from './index'
-import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_FETCH, ROUTE_UPDATE } from '../actions'
+import { POSITION_UPDATE, LEAP_POSITION_UPDATE, ROUTE_FILTER, ROUTE_FETCH, ROUTE_UPDATE } from '../actions'
+import { COTA, LEAP } from '../variables'
 
 describe('cotaApp reducers', () => {
   it('will save the filter when processing a ROUTE_FILTER action', () => {
@@ -127,7 +128,7 @@ describe('cotaApp reducers', () => {
     expect(newState.availableRoutes).toEqual([{ value: '001', label: '1 - Crazy Town' }])
   })
 
-  it('will should not remove all availableRoutes on route fetch action', () => {
+  it('will not remove all availableRoutes on route fetch action', () => {
     const availableRoutes = [
       { value: '001', label: '1 - Crazy Town' },
       { value: '101', label: '101 - Smallville' }
@@ -140,5 +141,67 @@ describe('cotaApp reducers', () => {
 
     let newState = reducer(currentState, { type: ROUTE_FETCH })
     expect(newState.availableRoutes).toEqual(availableRoutes)
+  })
+
+  it('sets the provider to COTA by default for all ROUTE_FILTER actions', () => {
+    let newState = reducer(undefined, { type: 'ROUTE_FILTER', filter: ['003'] })
+
+    expect(newState.provider).toEqual({ name: COTA })
+  })
+
+  describe('LEAP', () => {
+    it('has the LEAP route by default', () => {
+      let newState = reducer(undefined, { type: 'UNKNOWN_ACTION', stuff: [] })
+
+      expect(newState.availableRoutes).toEqual([{ value: 'LEAP', label: 'SMRT - Linden LEAP', provider: 'LEAP' }])
+    })
+
+    it('has the LEAP route last after routes are updated', () => {
+      const message = [{ value: '001', label: '1 - Crazy Town', provider: 'COTA' }]
+      let newState = reducer(undefined, { type: ROUTE_UPDATE, update: message })
+
+      expect(newState.availableRoutes[newState.availableRoutes.length - 1])
+        .toEqual({ value: 'LEAP', label: 'SMRT - Linden LEAP', provider: 'LEAP' })
+    })
+
+    it('transforms the data on a LEAP_POSITION_UPDATE action', () => {
+      const state = {
+        data: {
+          'SIMUPONYTAvehicle_api-test-public-v3-2': {
+            'stuff': 'that-should-not-be-changed'
+          }
+        }
+      }
+      const message = {
+        'attributes': {
+            'vehicle_id': 'SIMUPONYTAvehicle_api-test-public-v3-5',
+            'lat': 43.538284742935346,
+            'lon': 1.3600251758143491
+        }
+      }
+
+      const expected_data = {
+        ...state.data,
+        ...{
+          'SIMUPONYTAvehicle_api-test-public-v3-5': {
+            vehicleId: 'SIMUPONYTAvehicle_api-test-public-v3-5',
+            latitude: 43.538284742935346,
+            longitude: 1.3600251758143491,
+            bearing: 0,
+            provider: 'LEAP'
+          }
+        }
+      }
+
+      let newState = reducer(state, { type: LEAP_POSITION_UPDATE, update: message })
+
+      expect(newState.data).toEqual(expected_data)
+    })
+
+    it('sets the provider to LEAP when ROUTE_FILTER has LEAP filter', () => {
+      let newState = reducer(undefined, { type: 'ROUTE_FILTER', filter: ['LEAP'] })
+
+      expect(newState.provider).toEqual({ name: LEAP })
+    })
   })
 })

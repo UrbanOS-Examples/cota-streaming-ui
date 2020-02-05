@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { POSITION_UPDATE, ROUTE_FILTER, ROUTE_UPDATE } from '../actions'
-import { COTA } from '../variables'
+import { POSITION_UPDATE, LEAP_POSITION_UPDATE, ROUTE_FILTER, ROUTE_UPDATE } from '../actions'
+import { COTA, LEAP } from '../variables'
 import _ from 'lodash'
 
 const filter = (filter = [], action) => {
@@ -15,6 +15,9 @@ const filter = (filter = [], action) => {
 const provider = (provider = { name: COTA }, action) => {
   switch (action.type) {
     case ROUTE_FILTER:
+      if(action.filter[0] == LEAP) {
+        return Object.assign({}, provider, { name: LEAP })
+      }
       return Object.assign({}, provider, { name: COTA })
     default:
       return provider
@@ -36,6 +39,17 @@ const data = (data = {}, action) => {
       }
 
       return Object.assign({}, data, { [value.vehicleId]: value })
+    case LEAP_POSITION_UPDATE:
+      let attributes = action.update.attributes
+      let leap_value = {
+        vehicleId: attributes.vehicle_id,
+        latitude: attributes.lat,
+        longitude: attributes.lon,
+        bearing: 0,
+        provider: LEAP
+      }
+
+      return Object.assign({}, data, { [leap_value.vehicleId]: leap_value })
     case ROUTE_FILTER:
       return {}
     default:
@@ -43,7 +57,9 @@ const data = (data = {}, action) => {
   }
 }
 
-const availableRoutes = (availableRoutes = [], action) => {
+const defaultRoutes = [{ value: LEAP, label: 'SMRT - Linden LEAP', provider: LEAP }]
+
+const availableRoutes = (availableRoutes = defaultRoutes, action) => {
   switch (action.type) {
     case ROUTE_UPDATE:
       const sorted = _.sortBy(action.update, ({ linenum }) => linenum);
@@ -51,9 +67,9 @@ const availableRoutes = (availableRoutes = [], action) => {
       let routesToUse = uniqueRoutes.map((route) => {
         const lineNumber = new String(route.linenum).padStart(3, '0')
         const lineName = `${route.linenum} - ${route.linename}`
-        return { value: lineNumber, label: lineName, provider: 'COTA' }
+        return { value: lineNumber, label: lineName, provider: COTA }
       })
-      return routesToUse
+      return [...routesToUse, ...defaultRoutes]
     default:
       return availableRoutes
   }

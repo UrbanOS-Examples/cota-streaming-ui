@@ -1,6 +1,8 @@
 
 export const POSITION_UPDATE = 'POSITION_UPDATE'
 
+export const LEAP_POSITION_UPDATE = 'LEAP_POSITION_UPDATE'
+
 export const ROUTE_FILTER = 'ROUTE_FILTER'
 
 export const ROUTE_FETCH = 'ROUTE_FETCH'
@@ -9,6 +11,10 @@ export const ROUTE_UPDATE = 'ROUTE_UPDATE'
 
 export const positionUpdate = (message) => {
   return { type: POSITION_UPDATE, update: message }
+}
+
+export const leapPositionUpdate = (message) => {
+  return { type: LEAP_POSITION_UPDATE, update: message }
 }
 
 export const applyStreamFilter = (filter) => {
