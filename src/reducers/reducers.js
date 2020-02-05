@@ -15,6 +15,9 @@ const filter = (filter = [], action) => {
 const provider = (provider = { name: COTA }, action) => {
   switch (action.type) {
     case ROUTE_FILTER:
+      if(action.filter[0] == LEAP) {
+        return Object.assign({}, provider, { name: LEAP })
+      }
       return Object.assign({}, provider, { name: COTA })
     default:
       return provider

@@ -1,5 +1,6 @@
 import reducer from './index'
 import { POSITION_UPDATE, LEAP_POSITION_UPDATE, ROUTE_FILTER, ROUTE_FETCH, ROUTE_UPDATE } from '../actions'
+import { COTA, LEAP } from '../variables'
 
 describe('cotaApp reducers', () => {
   it('will save the filter when processing a ROUTE_FILTER action', () => {
@@ -142,6 +143,12 @@ describe('cotaApp reducers', () => {
     expect(newState.availableRoutes).toEqual(availableRoutes)
   })
 
+  it('sets the provider to COTA by default for all ROUTE_FILTER actions', () => {
+    let newState = reducer(undefined, { type: 'ROUTE_FILTER', filter: ['003'] })
+
+    expect(newState.provider).toEqual({ name: COTA })
+  })
+
   describe('LEAP', () => {
     it('has the LEAP route by default', () => {
       let newState = reducer(undefined, { type: 'UNKNOWN_ACTION', stuff: [] })
@@ -189,6 +196,12 @@ describe('cotaApp reducers', () => {
       let newState = reducer(state, { type: LEAP_POSITION_UPDATE, update: message })
 
       expect(newState.data).toEqual(expected_data)
+    })
+
+    it('sets the provider to LEAP when ROUTE_FILTER has LEAP filter', () => {
+      let newState = reducer(undefined, { type: 'ROUTE_FILTER', filter: ['LEAP'] })
+
+      expect(newState.provider).toEqual({ name: LEAP })
     })
   })
 })
