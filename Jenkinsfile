@@ -78,6 +78,7 @@ def deployUiTo(params = [:]) {
         def ingressScheme = internal ? 'internal' : 'internet-facing'
         def dnsZone = terraformOutputs.internal_dns_zone_name.value
         def rootDnsZone = terraformOutputs.root_dns_zone_name.value
+        def wafARN = terraformOutputs.eks_cluster_waf_acl_arn.value
 
         sh("""#!/bin/bash
             set -e
@@ -93,6 +94,7 @@ def deployUiTo(params = [:]) {
                 --set ingress.dnsZone="${dnsZone}" \
                 --set ingress.rootDnsZone="${rootDnsZone}" \
                 --set ingress.certificateARN="${certificateARNs}" \
+                --set ingress.wafARN="${wafARN}" \
                 --set image.tag="${env.GIT_COMMIT_HASH}"
         """.trim())
     }
