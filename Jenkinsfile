@@ -82,7 +82,6 @@ def deployUiTo(params = [:]) {
 
         sh("""#!/bin/bash
             set -e
-            helm init --client-only
             helm upgrade --install cota-streaming-ui ./chart \
                 --namespace cota-services \
                 --set env="${environment}" \
