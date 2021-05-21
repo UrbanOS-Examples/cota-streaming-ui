@@ -1,5 +1,5 @@
 library(
-    identifier: 'pipeline-lib@4.3.4',
+    identifier: 'pipeline-lib@4.8.0',
     retriever: modernSCM([$class: 'GitSCMSource',
                           remote: 'https://github.com/SmartColumbusOS/pipeline-lib',
                           credentialsId: 'jenkins-github-user'])
@@ -82,7 +82,6 @@ def deployUiTo(params = [:]) {
 
         sh("""#!/bin/bash
             set -e
-            helm init --client-only
             helm upgrade --install cota-streaming-ui ./chart \
                 --namespace cota-services \
                 --set env="${environment}" \
