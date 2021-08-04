@@ -61,7 +61,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'style.css'
     }),
-    new CopyPlugin(['public']),
+    new CopyPlugin({patterns: ['public']}),
     new CompressionPlugin({
       compressionOptions: {
         numiterations: 15,
@@ -72,7 +72,7 @@ module.exports = {
     }),
   ],
   optimization: {
-      moduleIds: 'hashed',
+      moduleIds: 'deterministic',
       runtimeChunk: 'single',
       splitChunks: {
           cacheGroups: {
